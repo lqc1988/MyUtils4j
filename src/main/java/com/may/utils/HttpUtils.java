@@ -173,6 +173,7 @@ public class HttpUtils {
             httpclient.close();
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("关闭连接异常：",e);
         }
     }
 
@@ -180,6 +181,5 @@ public class HttpUtils {
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put("channelCode", "GGYY01BJ78800");
         get("https://center-hxcpms.234g.cn/api/business/checkChannel", null, paramMap);
-
     }
 }
