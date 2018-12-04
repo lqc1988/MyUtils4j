@@ -355,7 +355,6 @@ public class FileUtils {
     public static void main(String[] args) {
         delDir("D:\\data\\2");
         delFile("D:\\data\\3");
-        delDir("D:\\data\\3");
         delFile("D:\\data\\1.sql");
     }
 
