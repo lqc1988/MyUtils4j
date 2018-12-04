@@ -64,8 +64,8 @@ public class HttpUtils {
         HttpPost httpPost = new HttpPost(url);
         try {
             if (null != headMap) {
-                for (String key : headMap.keySet()) {
-                    httpPost.setHeader(key, headMap.get(key));
+                for(Map.Entry<String,String> entry:headMap.entrySet()){
+                    httpPost.setHeader(entry.getKey(), entry.getValue());
                 }
             }
             //打印headers
@@ -75,10 +75,10 @@ public class HttpUtils {
             }
             List<NameValuePair> paraList = new ArrayList<>();
             if (null != paramMap) {
-                for (String key : paramMap.keySet()) {
-                    paraList.add(new BasicNameValuePair(key, paramMap.get(key)));
-                    System.out.println("post入参-->" + key + " : " + paramMap.get(key));
-                    logger.debug("post入参--> " + key + " : " + paramMap.get(key));
+                for(Map.Entry<String,String> entry:paramMap.entrySet()){
+                    paraList.add(new BasicNameValuePair(entry.getKey(),entry.getValue()));
+                    System.out.println("post入参-->"+entry.getKey() + " : " + entry.getValue());
+                    logger.debug("post入参--> "+entry.getKey() + " : " + entry.getValue());
                 }
             }
             httpPost.setEntity(new UrlEncodedFormEntity(paraList, "UTF-8"));
@@ -121,10 +121,10 @@ public class HttpUtils {
             URIBuilder uri_b = new URIBuilder(url);
             // 参数
             if (null != paramMap) {
-                for (String key : paramMap.keySet()) {
-                    uri_b.setParameter(key, paramMap.get(key));
-                    System.out.println("get入参-->" + key + " : " + paramMap.get(key));
-                    logger.debug("get入参--> " + key + " : " + paramMap.get(key));
+                for(Map.Entry<String,String> entry:paramMap.entrySet()){
+                    uri_b.setParameter(entry.getKey(), entry.getValue());
+                    System.out.println("get入参-->"+entry.getKey() + " : " + entry.getValue());
+                    logger.debug("get入参--> "+entry.getKey() + " : " + entry.getValue());
                 }
             }
             HttpGet httpGet = new HttpGet(uri_b.build());

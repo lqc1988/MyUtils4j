@@ -17,12 +17,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by wgj on 2018/5/31.
- * 文件下载工具类
+ * 文件工具类
  */
 public class FileUtils {
     private static Logger logger = LogManager.getLogger("utils.FileUtils");
-
 
 
     public static void touch(File file) throws IOException {
@@ -67,10 +65,10 @@ public class FileUtils {
         try {
             is = new FileInputStream(file);
             reader = new BufferedReader(new InputStreamReader(is, encoding));
-            String line = null;
+            String line;
             result = new StringWriter();
             out = new PrintWriter(result);
-            while ((line = reader.readLine()) != null) {
+            while (StringUtils.isNotBlank(line = reader.readLine())) {
                 out.println(line);
             }
             String str = result.toString();
@@ -85,8 +83,8 @@ public class FileUtils {
         }
     }
 
-    public static void closeQuietly(OutputStream output) {
-        closeQuietly((Closeable) output);
+    public static void closeQuietly(OutputStream out) {
+        closeQuietly((Closeable) out);
     }
 
     public static void closeQuietly(Closeable closeable) {
@@ -100,22 +98,6 @@ public class FileUtils {
     }
 
     /**
-     * 获取文件的扩展名
-     *
-     * @param filename
-     * @return
-     */
-    public static String getExtensionName(String filename) {
-        if ((filename != null) && (filename.length() > 0)) {
-            int dot = filename.lastIndexOf('.');
-            if ((dot > -1) && (dot < (filename.length() - 1))) {
-                return filename.substring(dot + 1);
-            }
-        }
-        return filename;
-    }
-
-    /**
      * 删除目录（文件夹）以及目录下的文件
      *
      * @param sPath 被删除目录的文件路径
@@ -123,35 +105,30 @@ public class FileUtils {
      */
     public static boolean delDir(String sPath) {
         boolean flag = true;
-        // 如果sPath不以文件分隔符结尾，自动添加文件分隔符
-        if (!sPath.endsWith(File.separator)) {
-            sPath = sPath + File.separator;
-        }
+        sPath = addSeparator(sPath);
         File dirFile = new File(sPath);
-        // 如果dir对应的文件不存在，或者不是一个目录，则退出
         if (!dirFile.exists() || !dirFile.isDirectory()) {
+            logger.error("删除目录失败：目录不存在--"+sPath);
             return false;
         }
-        // 删除文件夹下的所有文件(包括子目录)
-        File[] files = dirFile.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            // 删除子文件
-            if (files[i].isFile()) {
-                flag = delFile(files[i].getAbsolutePath());
-                if (!flag)
-                    break;
-            } // 删除子目录
-            else {
-                flag = delDir(files[i].getAbsolutePath());
-                if (!flag)
-                    break;
+        File[] fileList = listDirFiles(sPath);
+        if (null!=fileList){
+            for (File file:fileList) {
+                if (file.isFile()) {
+                    flag = delFile(file.getAbsolutePath());
+                    if (!flag) {
+                        break;
+                    }
+                } else {
+                    flag = delDir(file.getAbsolutePath());
+                    if (!flag) {
+                        break;
+                    }
+                }
             }
+            logger.debug("删除目录成功>>>"+sPath);
         }
-        if (!flag){
-            return false;
-        }
-        // 删除当前目录
-        return dirFile.delete();
+        return flag ? dirFile.delete() : flag;
     }
 
     /**
@@ -163,10 +140,16 @@ public class FileUtils {
     public static boolean delFile(String sPath) {
         boolean flag = false;
         File file = new File(sPath);
-        // 路径为文件且不为空则进行删除
-        if (file.isFile() && file.exists()) {
-            file.delete();
-            flag = true;
+        if (file.isFile()) {
+            if (file.exists()){
+                file.delete();
+                flag = true;
+                logger.debug("删除文件成功>>>"+sPath);
+            }else{
+                logger.error("删除文件失败：文件不存在--"+sPath);
+            }
+        }else{
+            logger.error("删除文件失败：目标是文件夹，不能直接删除--"+sPath);
         }
         return flag;
     }
@@ -229,46 +212,39 @@ public class FileUtils {
         long start = System.currentTimeMillis();
         byte[] buffer = new byte[1024];
         RandomAccessFile raFile = null;
-        long totalSize = 0; // 要下载的文件总大小
+        long totalSize = 0;
         try {
             int len;
             if (StringUtils.isBlank(remoteFileUrl) || StringUtils.isBlank(localFilePath)) {
                 throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
             }
             totalSize = getURLContentLength(remoteFileUrl, 0, 9, totalSize);
-            logger.info(opt + "下载文件大小为: " + totalSize + "b=" + (totalSize / 1024 / 1024) + "mb");
+            logger.info(opt + "下载文件大小为: " + totalSize + "b=" +formatFileSize(totalSize));
             URL url = new URL(remoteFileUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            // 确定文件是否存在
             if (checkFileExist(localFile_tmp)) {
                 // 采用断点续传，这里的依据是看下载文件是否在本地有.tp有扩展名同名文件
-                long fileSize = getFileLength(localFile_tmp); // 取得文件在小，以便确定随机写入的位置
-                logger.info(opt + "文件(" + localFile_tmp + ")续传中…FileSize: " + (fileSize / 1024 / 1024) + "mb");
+                long fileSize = getFileLength(localFile_tmp);
+                logger.info(opt + "文件(" + localFile_tmp + ")续传中...本地文件大小: " +formatFileSize(fileSize));
                 // 设置User-Agent
                 // urlc.setRequestProperty("User-Agent","NetFox");
                 // 设置断点续传的开始位置
                 connection.setRequestProperty("RANGE ", " bytes= " + fileSize + " - ");
-                // urlc.setRequestProperty("RANGE", "bytes="+fileSize); //
-                // 这样写不行，不能少了这个"-".
-                // 设置接受信息
                 connection.setRequestProperty("Accept ", " image/gif,image/x-xbitmap,application/msword,*/*");
-                raFile = new RandomAccessFile(localFile_tmp, "rw"); // 随机方位读取
-                raFile.seek(fileSize); // 定位指针到fileSize位置
+                raFile = new RandomAccessFile(localFile_tmp, "rw");
+                raFile.seek(fileSize);
                 bis = new BufferedInputStream(connection.getInputStream());
                 while ((len = bis.read(buffer)) > 0) {
-                    // 循环获取文件
                     raFile.write(buffer, 0, len);
-                    // buffer=buffer+bt;
                 }
                 logger.info(opt + "文件(" + localFile_tmp + ")续传接收完毕！ ");
             } else {
                 // 采用原始下载
-                // new File(localFile_bak);
-                fos = new FileOutputStream(localFile_tmp); // 没有下载完毕就将文件的扩展名命名.bak
+                fos = new FileOutputStream(localFile_tmp);
                 dos = new DataOutputStream(fos);
                 bis = new BufferedInputStream(connection.getInputStream());
-                logger.info(opt + "正在接收文件(" + localFile_tmp + ")… ");
-                while ((len = bis.read(buffer)) > 0) // 循环获取文件
+                logger.info(opt + "正在接收文件(" + localFile_tmp + ")... ");
+                while ((len = bis.read(buffer)) > 0)
                 {
                     dos.write(buffer, 0, len);
                 }
@@ -281,23 +257,7 @@ public class FileUtils {
             e.printStackTrace();
             throw e;
         } finally {
-            try {
-                if (bis != null) {
-                    bis.close();
-                }
-                if (dos != null) {
-                    dos.close();
-                }
-                if (fos != null) {
-                    fos.close();
-                }
-                if (raFile != null) {
-                    raFile.close();
-                }
-            } catch (Exception f) {
-                f.printStackTrace();
-                logger.error("关闭流异常：", f);
-            }
+            closeStream(dos, bis, fos, raFile);
         }
     }
 
@@ -349,7 +309,7 @@ public class FileUtils {
      * @param oldPath
      * @return
      */
-    public static String addFileSeparator(String oldPath) {
+    public static String addSeparator(String oldPath) {
         if (!File.separator.equals(oldPath.substring(oldPath.length() - 1, oldPath.length()))) {
             oldPath += File.separator;
         }
@@ -392,6 +352,13 @@ public class FileUtils {
         return new File(pathAndFile).length();
     }
 
+    public static void main(String[] args) {
+        delDir("D:\\data\\2");
+        delFile("D:\\data\\3");
+        delDir("D:\\data\\3");
+        delFile("D:\\data\\1.sql");
+    }
+
     /**
      * 获取文件大小，带单位
      *
@@ -399,24 +366,18 @@ public class FileUtils {
      * @return 文件大小字符串，如：112B、32KB、56MB、102GB
      * @throws Exception
      */
-    public static String getFileSize(String filePath) throws Exception {
-        String fileSize = "0B";
-        File orgFile = new File(filePath);
-        if (orgFile.exists()) {
-            long fz = orgFile.length();
-            fileSize = calcFileSize(fz);
-        }
-        return fileSize;
+    public static String formatFileSize(String filePath) {
+        return formatFileSize(getFileLength(filePath));
     }
 
     /**
-     * 计算文件大小
+     * 格式化文件大小
      *
      * @param fz 文件大小（字节数）36389319
      * @return 文件大小字符串，如：112B、32KB、56MB、102GB
      * @throws Exception
      */
-    public static String calcFileSize(long fz) {
+    public static String formatFileSize(long fz) {
         String fileSize = fz + "B";
         double fzd = fz;
         DecimalFormat df = new DecimalFormat("#.00");
@@ -452,10 +413,7 @@ public class FileUtils {
             logger.error("重命名文件(" + oldFileNamePath + ")，原文件不存在");
             return;
         }
-        //如果目标文件存在则删除
-        if (checkFileExist(newFileNamePath)) {
-            delFile(newFileNamePath);
-        }
+        delFile(newFileNamePath);
         File file = new File(oldFileNamePath);
         file.renameTo(new File(newFileNamePath));
         if (delOrg) {
@@ -492,6 +450,7 @@ public class FileUtils {
             return fileName.substring(0, fileName.lastIndexOf(".")).toLowerCase();
         }
     }
+
     /**
      * 获取文件扩展名，不包含符号点 .
      *
@@ -587,4 +546,125 @@ public class FileUtils {
         }
     }
 
+    /**
+     * 上传文件
+     *
+     * @param uploadFile
+     * @return
+     */
+    public static String uploadFile(File uploadFile) throws MyException {
+        FileInputStream in = null;
+        BufferedOutputStream out = null;
+        String result = "";
+        try {
+            SimpleDateFormat df1 = new SimpleDateFormat("yyyy");
+            SimpleDateFormat df2 = new SimpleDateFormat("MMdd");
+            String dir1 = df1.format(new Date());
+            String dir2 = df2.format(new Date());
+            String cPath = dir1 + "/" + dir2 + "/";
+            String localFilePath = ConstUtil.FILE_PATH_UPLOAD + cPath;
+            File fs = new File(localFilePath);
+            if (!fs.exists()) {
+                fs.mkdirs();
+            }
+            String fName = CommonUtil.getUUID() + getFileExt(uploadFile.getName(), true);
+            result = localFilePath + fName;
+            logger.info("上传文件：" + result);
+            in = new FileInputStream(uploadFile);
+            out = new BufferedOutputStream(new FileOutputStream(result, true));
+            int len = 2048;
+            byte[] b = new byte[len];
+            boolean uploadSuccess = false;
+            while ((len = in.read(b)) != -1) {
+                uploadSuccess = true;
+                out.write(b, 0, len);
+            }
+            in.close();
+            out.flush();
+            if (!uploadSuccess) {
+                result = null;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            logger.error("上传文件异常：", e);
+            throw new MyException("上传文件异常：" + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("上传文件异常：", e);
+            throw new MyException("上传文件异常：" + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("上传文件异常：", e);
+            throw new MyException("上传文件异常：" + e.getMessage());
+        } finally {
+            closeStream(in, out);
+        }
+        return result;
+    }
+
+    /**
+     * 关闭文件流
+     *
+     * @param in  FileInputStream
+     * @param out BufferedOutputStream
+     * @throws MyException
+     */
+    private static void closeStream(FileInputStream in, BufferedOutputStream out) throws MyException {
+        closeStream(in, out, null, null, null, null);
+    }
+
+    /**
+     * 关闭文件流
+     *
+     * @param dos    DataOutputStream
+     * @param bis    BufferedInputStream
+     * @param fos    FileOutputStream
+     * @param raFile RandomAccessFile
+     * @throws MyException
+     */
+    private static void closeStream(DataOutputStream dos, BufferedInputStream bis, FileOutputStream fos
+            , RandomAccessFile raFile) throws MyException {
+        closeStream(dos, bis, fos, raFile);
+
+    }
+
+    /**
+     * 关闭文件流
+     *
+     * @param in     FileInputStream
+     * @param out    BufferedOutputStream
+     * @param dos    DataOutputStream
+     * @param bis    BufferedInputStream
+     * @param fos    FileOutputStream
+     * @param raFile RandomAccessFile
+     * @throws MyException
+     */
+    private static void closeStream(FileInputStream in, BufferedOutputStream out
+            , DataOutputStream dos, BufferedInputStream bis, FileOutputStream fos
+            , RandomAccessFile raFile) throws MyException {
+        try {
+            if (null != in) {
+                in.close();
+            }
+            if (null != out) {
+                out.close();
+            }
+            if (null != dos) {
+                dos.close();
+            }
+            if (null != bis) {
+                bis.close();
+            }
+            if (null != fos) {
+                fos.close();
+            }
+            if (null != raFile) {
+                raFile.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("关闭文件流异常：", e);
+            throw new MyException("关闭文件流异常：" + e.getMessage());
+        }
+    }
 }
