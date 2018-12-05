@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
  */
 public class ConstUtil {
     public static ResourceBundle conf = ResourceBundle.getBundle("config");
-
     /**
      * 当前应用运行模式
      */

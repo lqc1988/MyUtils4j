@@ -2,12 +2,14 @@ package com.may.utils;
 
 import com.may.enums.ResultEnum;
 import com.may.exception.MyException;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.FileChannel;
@@ -19,69 +21,9 @@ import java.util.List;
 /**
  * 文件工具类
  */
-public class FileUtils {
+public class MyFileUtils extends FileUtils {
     private static Logger logger = LogManager.getLogger("utils.FileUtils");
 
-
-    public static void touch(File file) throws IOException {
-        if (!file.exists()) {
-            OutputStream out = openOutputStream(file);
-            closeQuietly(out);
-        }
-        boolean success = file.setLastModified(System.currentTimeMillis());
-        if (!success) {
-            throw new IOException("Unable to set the last modification time for " + file);
-        }
-    }
-
-    public static FileOutputStream openOutputStream(File file) throws IOException {
-        return openOutputStream(file, false);
-    }
-
-    public static FileOutputStream openOutputStream(File file, boolean append) throws IOException {
-        if (file.exists()) {
-            if (file.isDirectory()) {
-                throw new IOException("File '" + file + "' exists but is a directory");
-            }
-            if (file.canWrite() == false) {
-                throw new IOException("File '" + file + "' cannot be written to");
-            }
-        } else {
-            File parent = file.getParentFile();
-            if (parent != null) {
-                if (!parent.mkdirs() && !parent.isDirectory()) {
-                    throw new IOException("Directory '" + parent + "' could not be created");
-                }
-            }
-        }
-        return new FileOutputStream(file, append);
-    }
-
-    public static String readFileAsString(File file, String encoding) {
-        InputStream is = null;
-        StringWriter result = null;
-        PrintWriter out = null;
-        BufferedReader reader = null;
-        try {
-            is = new FileInputStream(file);
-            reader = new BufferedReader(new InputStreamReader(is, encoding));
-            String line;
-            result = new StringWriter();
-            out = new PrintWriter(result);
-            while (StringUtils.isNotBlank(line = reader.readLine())) {
-                out.println(line);
-            }
-            String str = result.toString();
-            return str;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            closeQuietly(reader);
-            closeQuietly(result);
-            closeQuietly(out);
-            closeQuietly(is);
-        }
-    }
 
     public static void closeQuietly(OutputStream out) {
         closeQuietly((Closeable) out);
@@ -108,12 +50,12 @@ public class FileUtils {
         sPath = addSeparator(sPath);
         File dirFile = new File(sPath);
         if (!dirFile.exists() || !dirFile.isDirectory()) {
-            logger.error("删除目录失败：目录不存在--"+sPath);
+            logger.error("删除目录失败：目录不存在--" + sPath);
             return false;
         }
         File[] fileList = listDirFiles(sPath);
-        if (null!=fileList){
-            for (File file:fileList) {
+        if (null != fileList) {
+            for (File file : fileList) {
                 if (file.isFile()) {
                     flag = delFile(file.getAbsolutePath());
                     if (!flag) {
@@ -126,7 +68,7 @@ public class FileUtils {
                     }
                 }
             }
-            logger.debug("删除目录成功>>>"+sPath);
+            logger.debug("删除目录成功>>>" + sPath);
         }
         return flag ? dirFile.delete() : flag;
     }
@@ -140,16 +82,16 @@ public class FileUtils {
     public static boolean delFile(String sPath) {
         boolean flag = false;
         File file = new File(sPath);
-        if (file.isFile()) {
-            if (file.exists()){
+        if (file.exists()) {
+            if (file.isFile()) {
                 file.delete();
                 flag = true;
-                logger.debug("删除文件成功>>>"+sPath);
-            }else{
-                logger.error("删除文件失败：文件不存在--"+sPath);
+                logger.debug("删除文件成功>>>" + sPath);
+            } else {
+                logger.error("删除文件失败：目标非文件，不能直接删除--" + sPath);
             }
-        }else{
-            logger.error("删除文件失败：目标是文件夹，不能直接删除--"+sPath);
+        } else {
+            logger.error("删除文件失败：文件不存在--" + sPath);
         }
         return flag;
     }
@@ -196,97 +138,48 @@ public class FileUtils {
         }
 
     }
-
     /**
-     * 下载远程文件到本地
+     * 下载远程文件到本地-利用common-io工具类
      *
-     * @param remoteFileUrl 远程文件下载地址URL
-     * @param localFilePath 保存到本的文件路径
+     * @param url 远程文件下载地址URL
+     * @param localPath 保存到本的文件路径
      */
-    public static void downRemoteFile(String remoteFileUrl, String localFilePath) throws Exception {
+    public static void downRemoteFile(String url, String localPath) throws Exception {
         String opt = "下载远程文件到本地，";
-        DataOutputStream dos = null;
-        BufferedInputStream bis = null;
-        FileOutputStream fos = null;
-        String localFile_tmp = localFilePath + ".tp "; // 未下载完文件加.tp扩展名，以便于区别
-        long start = System.currentTimeMillis();
-        byte[] buffer = new byte[1024];
-        RandomAccessFile raFile = null;
-        long totalSize = 0;
-        try {
-            int len;
-            if (StringUtils.isBlank(remoteFileUrl) || StringUtils.isBlank(localFilePath)) {
-                throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
-            }
-            totalSize = getURLContentLength(remoteFileUrl, 0, 9, totalSize);
-            logger.info(opt + "下载文件大小为: " + totalSize + "b=" +formatFileSize(totalSize));
-            URL url = new URL(remoteFileUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            if (checkFileExist(localFile_tmp)) {
-                // 采用断点续传，这里的依据是看下载文件是否在本地有.tp有扩展名同名文件
-                long fileSize = getFileLength(localFile_tmp);
-                logger.info(opt + "文件(" + localFile_tmp + ")续传中...本地文件大小: " +formatFileSize(fileSize));
-                // 设置User-Agent
-                // urlc.setRequestProperty("User-Agent","NetFox");
-                // 设置断点续传的开始位置
-                connection.setRequestProperty("RANGE ", " bytes= " + fileSize + " - ");
-                connection.setRequestProperty("Accept ", " image/gif,image/x-xbitmap,application/msword,*/*");
-                raFile = new RandomAccessFile(localFile_tmp, "rw");
-                raFile.seek(fileSize);
-                bis = new BufferedInputStream(connection.getInputStream());
-                while ((len = bis.read(buffer)) > 0) {
-                    raFile.write(buffer, 0, len);
-                }
-                logger.info(opt + "文件(" + localFile_tmp + ")续传接收完毕！ ");
-            } else {
-                // 采用原始下载
-                fos = new FileOutputStream(localFile_tmp);
-                dos = new DataOutputStream(fos);
-                bis = new BufferedInputStream(connection.getInputStream());
-                logger.info(opt + "正在接收文件(" + localFile_tmp + ")... ");
-                while ((len = bis.read(buffer)) > 0)
-                {
-                    dos.write(buffer, 0, len);
-                }
-                logger.info(opt + "文件(" + localFile_tmp + ")正常接收完毕！");
-            }
-            logger.info(opt + "共用时： " + (System.currentTimeMillis() - start) / 1000 + "秒");
-            // 下载完毕后，将文件重命名
-            renameFile(localFile_tmp, localFilePath, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            closeStream(dos, bis, fos, raFile);
+        if (StringUtils.isBlank(url) || StringUtils.isBlank(localPath)) {
+            throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
+        File localFile=new File(localPath);
+        logger.info(opt+"开始，url:"+url);
+        copyURLToFile(new URL(url), localFile ,60000,60000);
+        logger.info(opt+"url:"+url+"，文件大小："+formatFileSize(localPath));
     }
-
 
     /**
      * 获取请求URL返回的conten-length
      *
-     * @param remoteFileUrl
+     * @param url
      * @param retryTime     当前重试次数
      * @param bigTime       最大重试次数
      * @param totalSize     content-length值
      * @return
      */
-    public static long getURLContentLength(String remoteFileUrl, int retryTime, int bigTime, long totalSize) {
+    public static long getContentLen(String url, int retryTime, int bigTime, long totalSize) {
         try {
             if (totalSize > 0) {
                 return totalSize;
             }
             if (retryTime > bigTime) {
-                logger.error("请求(" + remoteFileUrl + ")已重试" + retryTime + "次，放弃重试");
+                logger.error("请求(" + url + ")已重试" + retryTime + "次，放弃重试");
                 return totalSize;
             }
             if (retryTime > 1) {
                 //根据重试次数延迟请求
                 Thread.sleep(retryTime * 1000 * 60);
             }
-            URL url = new URL(remoteFileUrl);
-            HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
-            logger.info("URL(" + remoteFileUrl + ")请求返回：Content-Length="
+            URL httpUrl = new URL(url);
+            HttpURLConnection urlc = (HttpURLConnection) httpUrl.openConnection();
+            logger.info("URL(" + url + ")请求返回：Content-Length="
                     + urlc.getHeaderField("Content-Length"));
             if (StringUtils.isNotBlank(urlc.getHeaderField("Content-Length"))) {
                 totalSize = Long.parseLong(urlc.getHeaderField("Content-Length"));
@@ -294,7 +187,7 @@ public class FileUtils {
             urlc.disconnect(); // 先断开，下面再连接，否则下面会报已经连接的错误
             if (totalSize == 0) {
                 retryTime++;
-                totalSize = getURLContentLength(remoteFileUrl, retryTime, bigTime, totalSize);
+                totalSize = getContentLen(url, retryTime, bigTime, totalSize);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -348,8 +241,8 @@ public class FileUtils {
      * @param pathAndFile
      * @return
      */
-    public static long getFileLength(String pathAndFile) {
-        return new File(pathAndFile).length();
+    public static BigInteger getFileLength(String pathAndFile) {
+        return sizeOfAsBigInteger(new File(pathAndFile));
     }
 
     public static void main(String[] args) {
@@ -367,7 +260,6 @@ public class FileUtils {
     public static String formatFileSize(String filePath) {
         return formatFileSize(getFileLength(filePath));
     }
-
     /**
      * 格式化文件大小
      *
@@ -376,19 +268,31 @@ public class FileUtils {
      * @throws Exception
      */
     public static String formatFileSize(long fz) {
+        return formatFileSize(BigInteger.valueOf(fz));
+    }
+
+    /**
+     * 格式化文件大小
+     *
+     * @param fz 文件大小（字节数）36389319
+     * @return 文件大小字符串，如：112B、32KB、56MB、102GB
+     * @throws Exception
+     */
+    public static String formatFileSize(BigInteger fz) {
         String fileSize = fz + "B";
-        double fzd = fz;
+        BigInteger fzd = fz;
         DecimalFormat df = new DecimalFormat("#.00");
-        if (fzd > 1024) {
-            fzd = fzd / 1024;
+        BigInteger base=BigInteger.valueOf(1024l);
+        if (fzd.subtract(base).signum()==1 ) {
+            fzd = fzd.divide(base);
             fileSize = df.format(fzd) + "KB";
         }
-        if (fzd > 1024) {
-            fzd = fzd / 1024;
+        if (fzd.subtract(base).signum()==1 ) {
+            fzd = fzd.divide(base);
             fileSize = df.format(fzd) + "MB";
         }
-        if (fzd > 1024) {
-            fzd = fzd / 1024;
+        if (fzd.subtract(base).signum()==1 ) {
+            fzd = fzd.divide(base);
             fileSize = df.format(fzd) + "GB";
         }
         return fileSize;
@@ -401,38 +305,25 @@ public class FileUtils {
      * @param newFileNamePath 新文件
      * @param delOrg          是否删除原文件
      */
-    public static void renameFile(String oldFileNamePath, String newFileNamePath, boolean delOrg) {
+    public static boolean renameFile(String oldFileNamePath, String newFileNamePath, boolean delOrg) {
+        boolean flag=false;
         if (oldFileNamePath.equals(newFileNamePath)) {
             logger.error("重命名文件(" + oldFileNamePath + ")，原文件与新文件路径名称相同，不能重命名");
-            return;
+            return flag;
         }
         //如果原文件不存在直接返回
         if (!checkFileExist(oldFileNamePath)) {
             logger.error("重命名文件(" + oldFileNamePath + ")，原文件不存在");
-            return;
+            return flag;
         }
         delFile(newFileNamePath);
         File file = new File(oldFileNamePath);
-        file.renameTo(new File(newFileNamePath));
+
+        flag= file.renameTo(new File(newFileNamePath));
         if (delOrg) {
             file.delete();
         }
-    }
-
-    /**
-     * byte[]保存写入文件
-     *
-     * @param filePath
-     * @param fileByte
-     * @throws Exception
-     */
-    public static void writeByteToFile(String filePath, byte[] fileByte) throws Exception {
-        File savePath = new File(filePath);
-        touch(savePath);
-        OutputStream output = new FileOutputStream(savePath);
-        BufferedOutputStream bufferedOutput = new BufferedOutputStream(output);
-        bufferedOutput.write(fileByte);
-        bufferedOutput.close();
+        return flag;
     }
 
     /**
@@ -517,18 +408,18 @@ public class FileUtils {
     /**
      * 利用nio FileChannel合并多个文件
      *
-     * @param fileList    要合并的文件列表
-     * @param outFilePath 输出文件路径
-     * @param ext         文件扩展名
+     * @param fileList 要合并的文件列表
+     * @param outPath  输出文件路径
+     * @param ext      文件扩展名
      */
-    public static void mergeFilesByNIO(List<File> fileList, String outFilePath, String ext) {
+    public static void mergeFilesByNIO(List<File> fileList, String outPath, String ext) throws MyException {
         SimpleDateFormat fd = new SimpleDateFormat("yyyyMMddHHmmss");
         String nowTime = fd.format(new Date());
-
-        File fout = new File(outFilePath + File.separator + nowTime + ext);
+        FileInputStream in = null;
+        FileOutputStream out = null;
+        File fout = new File(outPath + File.separator + nowTime + ext);
         try {
-            FileOutputStream out = new FileOutputStream(fout, true);
-            FileInputStream in = null;
+            out = new FileOutputStream(fout, true);
             FileChannel resultFileChannel = out.getChannel();
             for (File file : fileList) {
                 in = new FileInputStream(file);
@@ -538,9 +429,11 @@ public class FileUtils {
                 in.close();
             }
             resultFileChannel.close();
-            out.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            logger.error("利用nio FileChannel合并多个文件，异常：", e);
+        } finally {
+            closeStream(in, out);
         }
     }
 
@@ -553,7 +446,7 @@ public class FileUtils {
     public static String uploadFile(File uploadFile) throws MyException {
         FileInputStream in = null;
         BufferedOutputStream out = null;
-        String result = "";
+        String result;
         try {
             SimpleDateFormat df1 = new SimpleDateFormat("yyyy");
             SimpleDateFormat df2 = new SimpleDateFormat("MMdd");
@@ -572,14 +465,13 @@ public class FileUtils {
             out = new BufferedOutputStream(new FileOutputStream(result, true));
             int len = 2048;
             byte[] b = new byte[len];
-            boolean uploadSuccess = false;
+            boolean success = false;
             while ((len = in.read(b)) != -1) {
-                uploadSuccess = true;
+                success = true;
                 out.write(b, 0, len);
             }
-            in.close();
             out.flush();
-            if (!uploadSuccess) {
+            if (!success) {
                 result = null;
             }
         } catch (FileNotFoundException e) {
@@ -604,11 +496,22 @@ public class FileUtils {
      * 关闭文件流
      *
      * @param in  FileInputStream
-     * @param out BufferedOutputStream
+     * @param out FileOutputStream
      * @throws MyException
      */
-    private static void closeStream(FileInputStream in, BufferedOutputStream out) throws MyException {
+    private static void closeStream(FileInputStream in, FileOutputStream out) throws MyException {
         closeStream(in, out, null, null, null, null);
+    }
+
+    /**
+     * 关闭文件流
+     *
+     * @param in  FileInputStream
+     * @param bos BufferedOutputStream
+     * @throws MyException
+     */
+    private static void closeStream(FileInputStream in, BufferedOutputStream bos) throws MyException {
+        closeStream(in, null, null, null, bos, null);
     }
 
     /**
@@ -616,13 +519,13 @@ public class FileUtils {
      *
      * @param dos    DataOutputStream
      * @param bis    BufferedInputStream
-     * @param fos    FileOutputStream
+     * @param out    FileOutputStream
      * @param raFile RandomAccessFile
      * @throws MyException
      */
-    private static void closeStream(DataOutputStream dos, BufferedInputStream bis, FileOutputStream fos
+    private static void closeStream(DataOutputStream dos, BufferedInputStream bis, FileOutputStream out
             , RandomAccessFile raFile) throws MyException {
-        closeStream(dos, bis, fos, raFile);
+        closeStream(null, out, dos, bis, null, raFile);
 
     }
 
@@ -630,15 +533,15 @@ public class FileUtils {
      * 关闭文件流
      *
      * @param in     FileInputStream
-     * @param out    BufferedOutputStream
+     * @param out    FileOutputStream
      * @param dos    DataOutputStream
      * @param bis    BufferedInputStream
-     * @param fos    FileOutputStream
+     * @param bos    BufferedOutputStream
      * @param raFile RandomAccessFile
      * @throws MyException
      */
-    private static void closeStream(FileInputStream in, BufferedOutputStream out
-            , DataOutputStream dos, BufferedInputStream bis, FileOutputStream fos
+    private static void closeStream(FileInputStream in, FileOutputStream out
+            , DataOutputStream dos, BufferedInputStream bis, BufferedOutputStream bos
             , RandomAccessFile raFile) throws MyException {
         try {
             if (null != in) {
@@ -653,8 +556,8 @@ public class FileUtils {
             if (null != bis) {
                 bis.close();
             }
-            if (null != fos) {
-                fos.close();
+            if (null != bos) {
+                bos.close();
             }
             if (null != raFile) {
                 raFile.close();
