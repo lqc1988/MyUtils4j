@@ -235,19 +235,19 @@ public class MyFileUtils extends FileUtils {
         return new File(pathAndFile).exists();
     }
 
+    public static void main(String[] args) {
+        delFile("D:\\data\\3");
+        delFile("D:\\data\\1.sql");
+    }
+
     /**
      * 获取文件大小
      *
      * @param pathAndFile
      * @return
      */
-    public static BigInteger getFileLength(String pathAndFile) {
-        return sizeOfAsBigInteger(new File(pathAndFile));
-    }
-
-    public static void main(String[] args) {
-        delFile("D:\\data\\3");
-        delFile("D:\\data\\1.sql");
+    public static long getFileLength(String pathAndFile) {
+        return sizeOf(new File(pathAndFile));
     }
 
     /**
@@ -268,31 +268,20 @@ public class MyFileUtils extends FileUtils {
      * @throws Exception
      */
     public static String formatFileSize(long fz) {
-        return formatFileSize(BigInteger.valueOf(fz));
-    }
-
-    /**
-     * 格式化文件大小
-     *
-     * @param fz 文件大小（字节数）36389319
-     * @return 文件大小字符串，如：112B、32KB、56MB、102GB
-     * @throws Exception
-     */
-    public static String formatFileSize(BigInteger fz) {
         String fileSize = fz + "B";
-        BigInteger fzd = fz;
+        double fzd = fz;
         DecimalFormat df = new DecimalFormat("#.00");
-        BigInteger base=BigInteger.valueOf(1024l);
-        if (fzd.subtract(base).signum()==1 ) {
-            fzd = fzd.divide(base);
+        int base=1024;
+        if (fzd/base>0) {
+            fzd = fzd/base;
             fileSize = df.format(fzd) + "KB";
         }
-        if (fzd.subtract(base).signum()==1 ) {
-            fzd = fzd.divide(base);
+        if (fzd/base>0) {
+            fzd = fzd/base;
             fileSize = df.format(fzd) + "MB";
         }
-        if (fzd.subtract(base).signum()==1 ) {
-            fzd = fzd.divide(base);
+        if (fzd/base>0) {
+            fzd = fzd/base;
             fileSize = df.format(fzd) + "GB";
         }
         return fileSize;
