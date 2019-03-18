@@ -6,15 +6,18 @@ import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+
 /**
- * author : liqinchao
- * CreateTime : 2019/2/19 17:31
- * Description :
+ * ClassName : Test2
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : 测试类2
  */
 public class Test2 {
 
     public static void main(String[] args) {
-        calcSign();
+        System.out.println(41%20);
+//        calcSign();
 //        md5();
 //        delScale();
     }

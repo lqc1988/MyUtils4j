@@ -1,14 +1,13 @@
 package com.may.utils;
 
-
 import java.math.BigDecimal;
 import java.util.ResourceBundle;
 
 /**
- * ClassName: ConstUtil
- * CreateTime 2017年12月11日 下午3:46:39
- * author : liqinchao
- * Description: 系统常量工具类
+ * ClassName : ConstUtil
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : 系统常量工具类
  */
 public class ConstUtil {
     public static ResourceBundle conf = ResourceBundle.getBundle("config");
@@ -123,7 +122,7 @@ public class ConstUtil {
     /**
      * oauth access_token有效期：单位秒，默认30天
      */
-    public static final int ACCESS_TOKEN_EXPIRE = 30*24*60*60;
+    public static final int ACCESS_TOKEN_EXPIRE = 30 * 24 * 60 * 60;
     /**
      * oauth接口会员session ID
      */

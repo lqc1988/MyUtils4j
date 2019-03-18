@@ -15,16 +15,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author : liqinchao
- * @CreateTime : 2018/8/2 16:45
- * @Description :RSA加密工具类
+ * ClassName : RSAUtils
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : RSA加密工具类
  */
-
 public class RSAUtils {
     /**
      * 生成公钥和私钥,返回字符串类型的key map
      *
-     * @return Map<String   ,       String>
+     * @return Map<String, String>
      * @throws NoSuchAlgorithmException
      */
     public static Map<String, String> generateKeyString() throws NoSuchAlgorithmException {
@@ -45,7 +45,7 @@ public class RSAUtils {
     /**
      * 生成公钥和私钥,返回对象类型的key map
      *
-     * @return Map<String   ,       Object>
+     * @return Map<String, Object>
      * @throws NoSuchAlgorithmException
      */
     public static HashMap<String, Object> generateKeyObject() throws NoSuchAlgorithmException {
@@ -63,8 +63,8 @@ public class RSAUtils {
 
     /**
      * 使用模和指数生成RSA公钥
-     * 注意：【此代码用了默认补位方式，为RSA/None/PKCS1Padding，不同JDK默认的补位方式可能不同，如Android默认是RSA
-     * /None/NoPadding】
+     * 注意：【此代码用了默认补位方式，为RSA/None/PKCS1Padding，
+     * 不同JDK默认的补位方式可能不同，如Android默认是RSA/None/NoPadding】
      *
      * @param modulus  模
      * @param exponent 指数

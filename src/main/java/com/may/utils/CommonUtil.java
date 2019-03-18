@@ -27,6 +27,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * ClassName : CommonUtil
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : 通用工具类
+ */
 public class CommonUtil {
     private static Logger logger = LogManager.getLogger("utils.CommonUtil");
 

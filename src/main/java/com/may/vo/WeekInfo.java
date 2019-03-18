@@ -1,12 +1,11 @@
 package com.may.vo;
 
-/** 
- * @ClassName: WeekInfo 
- * @CreateTime 2017年5月13日 下午3:19:40 
- * @author : 李钦超 
- * @Description: 周信息对象
- *  
- */  
+/**
+ * ClassName : WeekInfo
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : 周信息VO
+ */
 public class WeekInfo {
 	/**
 	 * 周几：1~7

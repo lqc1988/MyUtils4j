@@ -3,32 +3,30 @@ package com.may.exception;
 /**
  * ClassName: MyException
  * CreateTime 2017年11月28日 下午1:42:48
- * author : liqinchao
+ * author : may
  * Description: 自定义异常
+ */
+
+import com.may.enums.ResultEnum;
+
+/**
+ * ClassName : MyException
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : 自定义异常
  */
 public class MyException extends Exception {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-    /**
-     * 操作失败-level
-     */
-    public static final int ERROR_LEVEL = 0;
-    /**
-     * 警告
-     */
-    public static final int WARNING_LEVEL = 2;
-    /**
-     * 参数错误
-     */
-    public static final int ERROR_LEVEL_PARAM = 3;
-    /**
-     * 参数错误消息
-     */
-    public static final String ERROR_MSG_PARAM = "参数错误";
 
     private int level;
+
+    public MyException() {
+        super(ResultEnum.ERR.getDisplay());
+        this.level = ResultEnum.ERR.getValue();
+    }
 
     public MyException(String message, int level) {
         super(message);
@@ -47,12 +45,12 @@ public class MyException extends Exception {
 
     public MyException(String message) {
         super(message);
-        this.level = ERROR_LEVEL;
+        this.level = ResultEnum.ERR.getValue();
     }
 
     public MyException(Throwable cause) {
         super(cause);
-        this.level = ERROR_LEVEL;
+        this.level = ResultEnum.ERR.getValue();
     }
 
     public int getLevel() {
@@ -61,11 +59,6 @@ public class MyException extends Exception {
 
     public void setLevel(int level) {
         this.level = level;
-    }
-    static public void throwParamError(String message)throws MyException {
-        MyException we = new MyException(message, ERROR_LEVEL_PARAM);
-        we.printStackTrace();
-        throw we;
     }
 
 }

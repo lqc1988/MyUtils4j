@@ -6,9 +6,10 @@ import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * author : may
- * CreateTime : 2018/12/4 13:40
- * Description :
+ * ClassName : Test1
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : 测试类1
  */
 public class Test1 {
     public static void main(String[] args) {

@@ -24,16 +24,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * author : may
- * CreateTime : 2018/11/29 11:52
- * PackageName: com.may.utils
- * Description :Http Client工具类
+ * ClassName : HttpUtils
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : Http Client工具类
  */
 public class HttpUtils {
     private static Logger logger = LogManager.getLogger("utils.HttpUtils");
-
     /**
-     * 发送 post请求
+     * 发送POST请求
      *
      * @param url      目标地址
      * @param headMap  追加的headers
@@ -47,7 +46,7 @@ public class HttpUtils {
     }
 
     /**
-     * 发送 post请求
+     * 发送POST请求
      *
      * @param url      目标地址
      * @param headMap  追加的headers
@@ -56,47 +55,42 @@ public class HttpUtils {
      * @return
      * @throws Exception
      */
-    public static String post(String url, Map<String, String> headMap, Map<String, String> paramMap, String body)
-            throws Exception {
+    public static String post(String url, Map<String, String> headMap, Map<String, String> paramMap,
+                              String body)throws Exception {
+        String opt="发送POST请求";
         String result = null;
         CloseableHttpResponse response = null;
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         try {
+            List<NameValuePair> paraList = new ArrayList<>();
+            if (null != paramMap) {
+                for(Map.Entry<String,String> entry:paramMap.entrySet()){
+                    paraList.add(new BasicNameValuePair(entry.getKey(),entry.getValue()));
+                    logger.debug(opt+",入参==>"+entry.getKey() + ":" + entry.getValue());
+                }
+            }
+            httpPost.setEntity(new UrlEncodedFormEntity(paraList, "UTF-8"));
             if (null != headMap) {
                 for(Map.Entry<String,String> entry:headMap.entrySet()){
                     httpPost.setHeader(entry.getKey(), entry.getValue());
                 }
             }
-            //打印headers
             for (Header header : httpPost.getAllHeaders()) {
-                System.out.println("post header-->" + header.getName() + " : " + header.getValue());
-                logger.debug("post header-->" + header.getName() + " : " + header.getValue());
+                logger.debug(opt+",header==>" + header.getName() + ":" + header.getValue());
             }
-            List<NameValuePair> paraList = new ArrayList<>();
-            if (null != paramMap) {
-                for(Map.Entry<String,String> entry:paramMap.entrySet()){
-                    paraList.add(new BasicNameValuePair(entry.getKey(),entry.getValue()));
-                    System.out.println("post入参-->"+entry.getKey() + " : " + entry.getValue());
-                    logger.debug("post入参--> "+entry.getKey() + " : " + entry.getValue());
-                }
-            }
-            httpPost.setEntity(new UrlEncodedFormEntity(paraList, "UTF-8"));
             if (StringUtils.isNotBlank(body)) {
                 httpPost.setEntity(new StringEntity(body, "UTF-8"));
             }
-            logger.debug("executing post " + httpPost.getURI());
+            logger.debug(opt+",URI==>" + httpPost.getURI());
             response = httpclient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 result = EntityUtils.toString(entity, "UTF-8");
-                logger.debug("executing post result" + result);
-                System.out.println("--------------------------------------");
-                System.out.println("Response content: " + result);
-                System.out.println("--------------------------------------");
+                logger.debug(opt+",响应==>" + result);
             }
         } catch (Exception e) {
-            logger.error("执行post异常：", e);
+            logger.error(opt+",异常：", e);
             e.printStackTrace();
             throw e;
         } finally {
@@ -106,7 +100,7 @@ public class HttpUtils {
     }
 
     /**
-     * 发送 get请求
+     * 发送GET请求
      *
      * @param url      目标地址
      * @param headMap  追加的headers
@@ -114,44 +108,36 @@ public class HttpUtils {
      * @return
      */
     public static String get(String url, Map<String, String> headMap, Map<String, String> paramMap) {
+        String opt="发送GET请求";
         String result = null;
         CloseableHttpResponse response = null;
         CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
             URIBuilder uri_b = new URIBuilder(url);
-            // 参数
             if (null != paramMap) {
                 for(Map.Entry<String,String> entry:paramMap.entrySet()){
                     uri_b.setParameter(entry.getKey(), entry.getValue());
-                    System.out.println("get入参-->"+entry.getKey() + " : " + entry.getValue());
-                    logger.debug("get入参--> "+entry.getKey() + " : " + entry.getValue());
+                    logger.debug(opt+",入参==>"+entry.getKey() + ":" + entry.getValue());
                 }
             }
             HttpGet httpGet = new HttpGet(uri_b.build());
-            // 追加headers
             if (null != headMap) {
                 for (String key : headMap.keySet()) {
                     httpGet.setHeader(key, headMap.get(key));
                 }
             }
-            //打印headers
             for (Header header : httpGet.getAllHeaders()) {
-                System.out.println("get header-->" + header.getName() + " : " + header.getValue());
-                logger.debug("get header-->" + header.getName() + " : " + header.getValue());
+                logger.debug(opt+",header==>" + header.getName() + ":" + header.getValue());
             }
-            System.out.println("执行get请求uri：" + httpGet.getURI());
-            logger.debug("执行get请求uri：" + httpGet.getURI());
+            logger.debug(opt+",URI==>" + httpGet.getURI());
             response = httpclient.execute(httpGet);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
-                // 打印响应内容长度
-//					System.out.println("Response content length: "+ entity.getContentLength());
-                result = EntityUtils.toString(entity);
-                // 打印响应内容
-                System.out.println("Response content: \n" + result);
+                result = EntityUtils.toString(entity, "UTF-8");
+                logger.debug(opt+",响应==>" + result);
             }
         } catch (Exception e) {
-            logger.error("执行get异常：", e);
+            logger.error(opt+",异常：", e);
             e.printStackTrace();
         } finally {
             closeConn(response, httpclient);
@@ -179,7 +165,7 @@ public class HttpUtils {
 
     public static void main(String[] args) throws Exception {
         Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("channelCode", "GGYY01BJ78800");
-        get("https://center-hxcpms.234g.cn/api/business/checkChannel", null, paramMap);
+        paramMap.put("abc", "123");
+        get("http://members.3322.org/dyndns/getip", null, paramMap);
     }
 }

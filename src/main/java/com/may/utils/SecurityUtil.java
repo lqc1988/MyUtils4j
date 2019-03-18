@@ -1,14 +1,11 @@
 package com.may.utils;
-/**
- * MD5加密工具类
- *
- * @author ku
- */
 
 import com.may.enums.ResultEnum;
 import com.may.exception.MyException;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
@@ -18,7 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * ClassName : SecurityUtil
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : 加密工具类
+ */
 public class SecurityUtil {
+    private static Logger logger = LogManager.getLogger("utils.SecurityUtil");
     /**
      * 校验接口基础入参
      *
@@ -37,13 +41,13 @@ public class SecurityUtil {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
         if (CommonUtil.compareMinute(new Date(), new Date(Long.parseLong(timestamp))) > ConstUtil.SIGN_EXPIRE) {
-            throw new MyException(ResultEnum.SIGN_EXPIRE.getDisplay());
+            throw new MyException(ResultEnum.SIGN_INVALIDATE.getDisplay());
         }
         String paraStr= JSONObject.fromObject(paramMap).toString();
         String signCalc = calcSignature(paramMap, appSecret);
-        System.out.println("appSecret="+appSecret+"，入参："+paraStr +"，平台计算签名为：" + signCalc);
+        logger.debug("appSecret="+appSecret+"，入参："+paraStr +"，服务端计算签名：" + signCalc);
         if (!sign.equals(signCalc)) {
-            throw new MyException(ResultEnum.SIGN_EXPIRE.getDisplay());
+            throw new MyException(ResultEnum.SIGN_INVALIDATE.getDisplay());
         }
     }
 
@@ -65,37 +69,6 @@ public class SecurityUtil {
         return calcSignature(paramMap, appSecret);
     }
 
-
-    /**
-     * 计算接口签名用来调用shop++
-     *
-     * @param paramMap
-     * @return
-     * @throws IOException
-     */
-    private final static String calcSignature4ShopXX(Map<String, String> paramMap,
-                                                     String secret) throws IOException {
-        //计算时移除sign本身
-        paramMap.remove(ConstUtil.API_PARAM_SIGN);
-        // 先将参数以其参数名的字典序升序进行排序
-        Map<String, String> sortedParams = new TreeMap<>(paramMap);
-        // 遍历排序后的字典，将所有参数按"key=value"格式拼接在一起
-        StringBuilder baseString = new StringBuilder(secret);
-        for (Map.Entry<String, String> param : sortedParams.entrySet()) {
-            baseString.append(param.getKey());
-            if (StringUtils.isBlank(param.getValue())) {
-                continue;
-            }
-            //加密时对value值进行urlEncode处理
-            baseString.append(URLEncoder.encode(param.getValue(), "utf8"));
-        }
-        baseString.append(secret);
-        System.out.println("bas------------------------->" + baseString);
-        // 使用MD5对待签名串求签
-        return MD5(baseString.toString()).toUpperCase();
-    }
-
-
     /**
      * 第三方平台调用中心平台时计算接口签名
      *
@@ -115,10 +88,11 @@ public class SecurityUtil {
             if (StringUtils.isBlank(param.getValue())) {
                 continue;
             }
-            baseString.append(param.getValue());
+            baseString.append(URLEncoder.encode(param.getValue(), "utf8"));
+//            baseString.append(param.getValue());
         }
         baseString.append(secret);
-        System.out.println("bas------------------------->" + baseString);
+        logger.debug("加密原始串：" + baseString);
         // 使用MD5对待签名串求签
         return MD5(baseString.toString()).toUpperCase();
     }
@@ -157,16 +131,12 @@ public class SecurityUtil {
         String timestamp = System.currentTimeMillis()+"";
         System.out.println("timestamp:"+timestamp);
         paramMap.put("timestamp", timestamp);
-        paramMap.put("serialNo", "1");
+        paramMap.put("serialNo", "123");
         paramMap.put("clientVersion", "1.0.0");
-        paramMap.put("userName", "lijunlngx");
+        paramMap.put("userName", "test");
         String sign = encryptAPIParam(appSecret, paramMap);
         System.out.println("sign:" + sign);
         paramMap.put("sign", sign);
-
-
-
         validateAPIParam(appSecret, paramMap);
-
     }
 }

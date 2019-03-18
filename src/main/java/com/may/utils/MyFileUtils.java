@@ -19,7 +19,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 文件工具类
+ * ClassName : MyFileUtils
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : 文件工具类
  */
 public class MyFileUtils extends FileUtils {
     private static Logger logger = LogManager.getLogger("utils.FileUtils");

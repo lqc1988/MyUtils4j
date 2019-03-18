@@ -7,6 +7,12 @@ import java.util.Random;
 import static org.apache.commons.text.CharacterPredicates.DIGITS;
 import static org.apache.commons.text.CharacterPredicates.LETTERS;
 
+/**
+ * ClassName : RandomUtils
+ * Author : liqinchao
+ * CreateTime : 2019/3/18 18:11
+ * Description : 随机数工具类
+ */
 public class RandomUtils {
 
     /**
