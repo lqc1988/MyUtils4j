@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration status="OFF">
+<configuration status="OFF" monitorInterval="30">
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出指定level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="[%d{yyy-MM-dd HH:mm:ss.SSS}][%level]%l - %m%n"/>
         </Console>
+        <!--临时文件日志，这个log每次运行程序会自动清空，由append属性决定，这个也挺有用的，适合临时测试用-->
+        <File name="tmpLog" fileName="/data/logs/tmp/MyUtils4j.log" append="false">
+            <PatternLayout pattern="[%d{yyy-MM-dd HH:mm:ss.SSS}][%level]%l - %m%n"/>
+        </File>
+        <!-- 文件日志，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFile" fileName="/data/logs/MyUtils4j/my.log">
+            <filePattern>/data/logs/MyUtils4j/$${date:yyyy-MM}/my-%d{MM-dd-yyyy}-%i.log.gz</filePattern>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20 MB"/>
+                <TimeBasedTriggeringPolicy interval="24" modulate="true"/>
+            </Policies>
+            <PatternLayout pattern="[%d{yyy-MM-dd HH:mm:ss.SSS}][%level]%l - %m%n"/>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
     </appenders>
     <loggers>
         <logger name="utils" level="debug" additivity="false">
             <appender-ref ref="Console"/>
+            <appender-ref ref="tmpLog"/>
+            <appender-ref ref="RollingFile"/>
         </logger>
         <root level="error">
             <appender-ref ref="Console"/>

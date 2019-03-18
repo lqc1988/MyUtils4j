@@ -129,14 +129,14 @@ public class SecurityUtil {
         //接口公共参数
         paramMap.put("appKey", "ba5e4aa800904377a60c4175030fc6c2");
         String timestamp = System.currentTimeMillis()+"";
-        System.out.println("timestamp:"+timestamp);
+//        System.out.println("timestamp:"+timestamp);
         paramMap.put("timestamp", timestamp);
         paramMap.put("serialNo", "123");
         paramMap.put("clientVersion", "1.0.0");
         paramMap.put("userName", "test");
         String sign = encryptAPIParam(appSecret, paramMap);
-        System.out.println("sign:" + sign);
+//        System.out.println("sign:" + sign);
         paramMap.put("sign", sign);
-        validateAPIParam(appSecret, paramMap);
+//        validateAPIParam(appSecret, paramMap);
     }
 }
