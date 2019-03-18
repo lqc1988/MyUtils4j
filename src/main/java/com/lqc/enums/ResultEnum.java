@@ -1,4 +1,4 @@
-package com.may.enums;
+package com.lqc.enums;
 
 /**
  * ClassName : ResultEnum

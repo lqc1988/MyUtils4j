@@ -1,8 +1,8 @@
-package com.may.utils;
+package com.lqc.utils;
 
-import com.may.enums.ResultEnum;
-import com.may.exception.MyException;
-import com.may.vo.WeekInfo;
+import com.lqc.enums.ResultEnum;
+import com.lqc.exception.MyException;
+import com.lqc.vo.WeekInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,15 +10,10 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.channels.FileChannel;
-import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

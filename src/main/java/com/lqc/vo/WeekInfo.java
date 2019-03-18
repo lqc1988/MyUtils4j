@@ -1,4 +1,4 @@
-package com.may.vo;
+package com.lqc.vo;
 
 /**
  * ClassName : WeekInfo

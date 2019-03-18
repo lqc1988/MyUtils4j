@@ -1,7 +1,7 @@
-package com.may.utils;
+package com.lqc.utils;
 
-import com.may.enums.ResultEnum;
-import com.may.exception.MyException;
+import com.lqc.enums.ResultEnum;
+import com.lqc.exception.MyException;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;

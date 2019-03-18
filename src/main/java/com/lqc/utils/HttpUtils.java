@@ -1,4 +1,4 @@
-package com.may.utils;
+package com.lqc.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;

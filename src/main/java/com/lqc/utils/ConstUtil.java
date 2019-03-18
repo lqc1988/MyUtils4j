@@ -1,4 +1,4 @@
-package com.may.utils;
+package com.lqc.utils;
 
 import java.math.BigDecimal;
 import java.util.ResourceBundle;

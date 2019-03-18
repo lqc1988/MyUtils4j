@@ -1,4 +1,4 @@
-package com.may.utils;
+package com.lqc.utils;
 
 import org.apache.commons.text.RandomStringGenerator;
 

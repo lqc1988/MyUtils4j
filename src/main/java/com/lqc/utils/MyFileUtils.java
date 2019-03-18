@@ -1,7 +1,7 @@
-package com.may.utils;
+package com.lqc.utils;
 
-import com.may.enums.ResultEnum;
-import com.may.exception.MyException;
+import com.lqc.enums.ResultEnum;
+import com.lqc.exception.MyException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.FileChannel;

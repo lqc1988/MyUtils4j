@@ -1,4 +1,4 @@
-package com.may.exception;
+package com.lqc.exception;
 
 /**
  * ClassName: MyException
@@ -7,7 +7,7 @@ package com.may.exception;
  * Description: 自定义异常
  */
 
-import com.may.enums.ResultEnum;
+import com.lqc.enums.ResultEnum;
 
 /**
  * ClassName : MyException
