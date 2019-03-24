@@ -140,10 +140,11 @@ public class MyFileUtils extends FileUtils {
         }
 
     }
+
     /**
      * 下载远程文件到本地-利用common-io工具类
      *
-     * @param url 远程文件下载地址URL
+     * @param url       远程文件下载地址URL
      * @param localPath 保存到本的文件路径
      */
     public static void downRemoteFile(String url, String localPath) throws Exception {
@@ -151,19 +152,19 @@ public class MyFileUtils extends FileUtils {
         if (StringUtils.isBlank(url) || StringUtils.isBlank(localPath)) {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
-        File localFile=new File(localPath);
-        logger.info(opt+"开始，url:"+url);
-        copyURLToFile(new URL(url), localFile ,60000,60000);
-        logger.info(opt+"url:"+url+"，文件大小："+formatFileSize(localPath));
+        File localFile = new File(localPath);
+        logger.info(opt + "开始，url:" + url);
+        copyURLToFile(new URL(url), localFile, 60000, 60000);
+        logger.info(opt + "url:" + url + "，文件大小：" + formatFileSize(localPath));
     }
 
     /**
      * 获取请求URL返回的conten-length
      *
      * @param url
-     * @param retryTime     当前重试次数
-     * @param bigTime       最大重试次数
-     * @param totalSize     content-length值
+     * @param retryTime 当前重试次数
+     * @param bigTime   最大重试次数
+     * @param totalSize content-length值
      * @return
      */
     public static long getContentLen(String url, int retryTime, int bigTime, long totalSize) {
@@ -238,10 +239,42 @@ public class MyFileUtils extends FileUtils {
     }
 
     public static void main(String[] args) {
-        delFile("D:\\data\\3");
-        delFile("D:\\data\\1.sql");
+        try {
+            String filePath = "conf/SMIL.txt";
+            InputStream in = ClassLoader.getSystemResourceAsStream(filePath);
+            String data=ReadFromInputStream(in);
+            System.out.println(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    public static String ReadFromInputStream(InputStream inputStream){
+        String data=null;
+        InputStreamReader in=null;
+        try {
+            in = new InputStreamReader(inputStream,"utf-8");
+            // 读取文件内容
+            int length = -1 ;
+            char[] buffer = new char[1024];
+            StringBuffer sb = new StringBuffer();
+            while((length = in.read(buffer, 0, 1024) ) != -1){
+                sb.append(buffer,0,length);
+            }
+            data = new String(sb);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try{
+                if (null!=in){
+                    in.close();
+                }
+            }catch (Exception e){
+
+            }
+        }
+        return data;
+    }
     /**
      * 获取文件大小
      *
@@ -262,6 +295,7 @@ public class MyFileUtils extends FileUtils {
     public static String formatFileSize(String filePath) {
         return formatFileSize(getFileLength(filePath));
     }
+
     /**
      * 格式化文件大小
      *
@@ -273,17 +307,17 @@ public class MyFileUtils extends FileUtils {
         String fileSize = fz + "B";
         double fzd = fz;
         DecimalFormat df = new DecimalFormat("#.00");
-        int base=1024;
-        if (fzd/base>0) {
-            fzd = fzd/base;
+        int base = 1024;
+        if (fzd / base > 0) {
+            fzd = fzd / base;
             fileSize = df.format(fzd) + "KB";
         }
-        if (fzd/base>0) {
-            fzd = fzd/base;
+        if (fzd / base > 0) {
+            fzd = fzd / base;
             fileSize = df.format(fzd) + "MB";
         }
-        if (fzd/base>0) {
-            fzd = fzd/base;
+        if (fzd / base > 0) {
+            fzd = fzd / base;
             fileSize = df.format(fzd) + "GB";
         }
         return fileSize;
@@ -297,7 +331,7 @@ public class MyFileUtils extends FileUtils {
      * @param delOrg          是否删除原文件
      */
     public static boolean renameFile(String oldFileNamePath, String newFileNamePath, boolean delOrg) {
-        boolean flag=false;
+        boolean flag = false;
         if (oldFileNamePath.equals(newFileNamePath)) {
             logger.error("重命名文件(" + oldFileNamePath + ")，原文件与新文件路径名称相同，不能重命名");
             return flag;
@@ -310,7 +344,7 @@ public class MyFileUtils extends FileUtils {
         delFile(newFileNamePath);
         File file = new File(oldFileNamePath);
 
-        flag= file.renameTo(new File(newFileNamePath));
+        flag = file.renameTo(new File(newFileNamePath));
         if (delOrg) {
             file.delete();
         }

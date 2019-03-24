@@ -1,0 +1,3 @@
+    <par dur="20000ms">
+      <text region="text" src="%id%" />
+    </par>

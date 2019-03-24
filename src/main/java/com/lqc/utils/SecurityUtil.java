@@ -1,8 +1,8 @@
 package com.lqc.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lqc.enums.ResultEnum;
 import com.lqc.exception.MyException;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,7 +43,7 @@ public class SecurityUtil {
         if (CommonUtil.compareMinute(new Date(), new Date(Long.parseLong(timestamp))) > ConstUtil.SIGN_EXPIRE) {
             throw new MyException(ResultEnum.SIGN_INVALIDATE.getDisplay());
         }
-        String paraStr= JSONObject.fromObject(paramMap).toString();
+        String paraStr= JSONObject.toJSONString(paramMap);
         String signCalc = calcSignature(paramMap, appSecret);
         logger.debug("appSecret="+appSecret+"，入参："+paraStr +"，服务端计算签名：" + signCalc);
         if (!sign.equals(signCalc)) {
@@ -129,13 +129,14 @@ public class SecurityUtil {
         //接口公共参数
         paramMap.put("appKey", "ba5e4aa800904377a60c4175030fc6c2");
         String timestamp = System.currentTimeMillis()+"";
-//        System.out.println("timestamp:"+timestamp);
+        System.out.println("timestamp:"+timestamp);
         paramMap.put("timestamp", timestamp);
-        paramMap.put("serialNo", "123");
-        paramMap.put("clientVersion", "1.0.0");
-        paramMap.put("userName", "test");
+        paramMap.put("deviceCode", "000F0E627964416CCEFBE4749D1F332F79B3D9B1");
+        paramMap.put("activeCode", "196FEAC042E54BD59555FB446FF719EE");
+        paramMap.put("deviceTypeId", "19b83b0f476749309039bf6e4f02c74d");
+        paramMap.put("deviceTitle", "AAA");
         String sign = encryptAPIParam(appSecret, paramMap);
-//        System.out.println("sign:" + sign);
+        System.out.println("sign:" + sign);
         paramMap.put("sign", sign);
 //        validateAPIParam(appSecret, paramMap);
     }
