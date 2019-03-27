@@ -11,7 +11,7 @@ public enum ResultEnum {
 	ERR_PARAM(101, "参数错误"),
 	EXIST(102, "数据已存在"),
 	EXIST_NOT(103, "数据不存在"),
-	SIGN_INVALIDATE(104, "签名无效"),
+	SIGN_INVALID(104, "签名无效"),
 	SUCCESS(200, "成功"),
 	UN_AUTH(400, "没有权限"),
 	LOGIN_TIMEOUT(401, "登录超时") ,

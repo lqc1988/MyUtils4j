@@ -41,13 +41,13 @@ public class SecurityUtil {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
         if (CommonUtil.compareMinute(new Date(), new Date(Long.parseLong(timestamp))) > ConstUtil.SIGN_EXPIRE) {
-            throw new MyException(ResultEnum.SIGN_INVALIDATE.getDisplay());
+            throw new MyException(ResultEnum.SIGN_INVALID.getDisplay());
         }
         String paraStr= JSONObject.toJSONString(paramMap);
         String signCalc = calcSignature(paramMap, appSecret);
         logger.debug("appSecret="+appSecret+"，入参："+paraStr +"，服务端计算签名：" + signCalc);
         if (!sign.equals(signCalc)) {
-            throw new MyException(ResultEnum.SIGN_INVALIDATE.getDisplay());
+            throw new MyException(ResultEnum.SIGN_INVALID.getDisplay());
         }
     }
 
@@ -131,10 +131,9 @@ public class SecurityUtil {
         String timestamp = System.currentTimeMillis()+"";
         System.out.println("timestamp:"+timestamp);
         paramMap.put("timestamp", timestamp);
-        paramMap.put("deviceCode", "000F0E627964416CCEFBE4749D1F332F79B3D9B1");
-        paramMap.put("activeCode", "196FEAC042E54BD59555FB446FF719EE");
-        paramMap.put("deviceTypeId", "19b83b0f476749309039bf6e4f02c74d");
-        paramMap.put("deviceTitle", "AAA");
+        paramMap.put("tel", "18663001240");
+//        paramMap.put("access_token", "801a7bfc70254f8db6630d08ba7f768f");
+//        paramMap.put("serialNo", "PB0000100001005E");
         String sign = encryptAPIParam(appSecret, paramMap);
         System.out.println("sign:" + sign);
         paramMap.put("sign", sign);
