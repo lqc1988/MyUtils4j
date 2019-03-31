@@ -4,8 +4,9 @@ import com.lqc.enums.ResultEnum;
 import com.lqc.exception.MyException;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
@@ -22,7 +23,8 @@ import java.util.TreeMap;
  * Description : 加密工具类
  */
 public class SecurityUtil {
-    private static Logger logger = LogManager.getLogger("utils.SecurityUtil");
+//    private static Logger logger = LogManager.getLogger("utils.SecurityUtil");
+    private static Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
     /**
      * 校验接口基础入参
      *
