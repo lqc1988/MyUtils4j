@@ -54,6 +54,7 @@ public class HttpUtils {
             logger.debug(opt + ",header==>" + header.getName() + ":" + header.getValue());
         }
         if (StringUtils.isNotBlank(body)) {
+            logger.debug(opt+"body==> " + body);
             httpPost.setEntity(new StringEntity(body, "UTF-8"));
         }
         logger.debug(opt + ",URI==>" + httpPost.getURI());
