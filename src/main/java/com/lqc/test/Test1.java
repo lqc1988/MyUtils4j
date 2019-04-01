@@ -17,8 +17,12 @@ public class Test1 {
         try {
 //            String localIP= InetAddress.getLocalHost().getHostAddress();
 //            System.out.println("localIP="+localIP);
-            System.out.println("getHostName:"+InetAddress.getLocalHost().getHostName());
-            System.out.println("getHostAddress:"+InetAddress.getLocalHost().getHostAddress());
+            int a=1,b=1000;
+            System.out.println(a/b);
+            System.out.println(a%b);
+//            System.out.println("getHostName:"+InetAddress.getLocalHost().getHostName());
+//            System.out.println("getHostAddress:"+InetAddress.getLocalHost().getHostAddress());
+
         }catch (Exception e){
             e.printStackTrace();
         }

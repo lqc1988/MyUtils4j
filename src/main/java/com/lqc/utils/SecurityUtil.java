@@ -131,10 +131,13 @@ public class SecurityUtil {
         String timestamp = System.currentTimeMillis()+"";
         System.out.println("timestamp:"+timestamp);
         paramMap.put("timestamp", timestamp);
-        paramMap.put("tel", "18663001240");
+//        paramMap.put("tel", "18663001240");
 //        paramMap.put("access_token", "c8c0846b18104864bb95c0957efecc3a");
 //        paramMap.put("serviceId", "fa8c269a8cab434dbca51b97c0bc19e1");
 //        paramMap.put("serialNo", "PB00001000130699");
+        paramMap.put("serviceType", "1");
+        paramMap.put("eventType", "1");
+        paramMap.put("serialNo", "PB00001000010418");
         String sign = encryptAPIParam(appSecret, paramMap);
         System.out.println("sign:" + sign);
         paramMap.put("sign", sign);
