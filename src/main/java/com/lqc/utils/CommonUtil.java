@@ -4,8 +4,8 @@ import com.lqc.enums.ResultEnum;
 import com.lqc.exception.MyException;
 import com.lqc.vo.WeekInfo;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -28,7 +28,8 @@ import java.util.regex.Pattern;
  * Description : 通用工具类
  */
 public class CommonUtil {
-    private static Logger logger = LogManager.getLogger("utils.CommonUtil");
+//    private static Logger logger = LogManager.getLogger("utils.CommonUtil");
+    private static Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 
     /**
      * 获取真实的请求IP地址

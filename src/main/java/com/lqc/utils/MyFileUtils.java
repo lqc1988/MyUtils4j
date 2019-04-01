@@ -4,8 +4,8 @@ import com.lqc.enums.ResultEnum;
 import com.lqc.exception.MyException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -24,8 +24,8 @@ import java.util.List;
  * Description : 文件工具类
  */
 public class MyFileUtils extends FileUtils {
-    private static Logger logger = LogManager.getLogger("utils.FileUtils");
-
+//    private static Logger logger = LogManager.getLogger("utils.FileUtils");
+    private static Logger logger = LoggerFactory.getLogger(MyFileUtils.class);
 
     public static void closeQuietly(OutputStream out) {
         closeQuietly((Closeable) out);
