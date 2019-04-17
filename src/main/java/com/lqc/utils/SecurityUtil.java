@@ -126,10 +126,10 @@ public class SecurityUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        String appSecret = "bfa1ba4a3dac4f18adec949ac00a44d2";
+        String appSecret = "3eeb9842ec5645debc5153ab998f6e1f";
         HashMap<String, String> paramMap = new HashMap<>();
         //接口公共参数
-        paramMap.put("appKey", "ba5e4aa800904377a60c4175030fc6c2");
+        paramMap.put("appKey", "5fad1ff904104333a74b5077807f021d");
         String timestamp = System.currentTimeMillis()+"";
         System.out.println("timestamp:"+timestamp);
         paramMap.put("timestamp", timestamp);
@@ -137,9 +137,10 @@ public class SecurityUtil {
 //        paramMap.put("access_token", "c8c0846b18104864bb95c0957efecc3a");
 //        paramMap.put("serviceId", "fa8c269a8cab434dbca51b97c0bc19e1");
 //        paramMap.put("serialNo", "PB00001000130699");
-        paramMap.put("serviceType", "1");
-        paramMap.put("eventType", "1");
-        paramMap.put("serialNo", "PB00001000010418");
+        paramMap.put("serviceType", "0");
+        paramMap.put("eventType", "D");
+        paramMap.put("serialNo", "VT000010002201C8");
+        paramMap.put("url", "pages/service-detail/service-detail");
         String sign = encryptAPIParam(appSecret, paramMap);
         System.out.println("sign:" + sign);
         paramMap.put("sign", sign);
