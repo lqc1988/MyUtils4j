@@ -17,7 +17,7 @@ public class Test1 {
         try {
 //            String localIP= InetAddress.getLocalHost().getHostAddress();
 //            System.out.println("localIP="+localIP);
-            int a=1,b=1000;
+            int a=100,b=1000;
             System.out.println(a/b);
             System.out.println(a%b);
 //            System.out.println("getHostName:"+InetAddress.getLocalHost().getHostName());
