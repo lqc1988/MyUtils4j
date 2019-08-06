@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
@@ -126,15 +127,20 @@ public class SecurityUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        String appSecret = "bfa1ba4a3dac4f18adec949ac00a44d2";
+        String appSecret = "cd915faaf7b24fbb9002d00e1d1d597b";
         HashMap<String, String> paramMap = new HashMap<>();
         //接口公共参数
-        paramMap.put("appKey", "ba5e4aa800904377a60c4175030fc6c2");
+        paramMap.put("appKey", "5213df89aa4740f998dbb7e53413a01f");
         String timestamp = System.currentTimeMillis()+"";
         System.out.println("timestamp:"+timestamp);
         paramMap.put("timestamp", timestamp);
-//        paramMap.put("tel", "18663001240");
-        paramMap.put("access_token", "0cc22d6563954578902fc1dd5591ef57");
+        paramMap.put("tel", "17663202709");
+//        paramMap.put("name", "管理后台webAdmin");
+//        paramMap.put("type", "3");
+//        paramMap.put("price", new BigDecimal("0.00").toString());
+//        paramMap.put("categoryId", "351");
+//        paramMap.put("grantAppKey", "c1dfc45857954622865d6a5d112fc65f");
+//        paramMap.put("access_token", "0cc22d6563954578902fc1dd5591ef57");
 //        paramMap.put("serviceId", "fa8c269a8cab434dbca51b97c0bc19e1");
 //        paramMap.put("serialNo", "PB00001000130699");
 //        paramMap.put("serviceType", "0");
@@ -142,8 +148,70 @@ public class SecurityUtil {
 //        paramMap.put("serialNo", "VT000010002201C8");
 //        paramMap.put("url", "pages/service-detail/service-detail");
         String sign = encryptAPIParam(appSecret, paramMap);
+//        encrypt4ShopXX(paramMap);
         System.out.println("sign:" + sign);
-        paramMap.put("sign", sign);
+//        paramMap.put("sign", sign);
 //        validateAPIParam(appSecret, paramMap);
     }
+
+    /**
+     * 运营中心调用其他应用接口请求参数加密
+     *
+     *
+     */
+    public static void encrypt4ShopXX(final HashMap<String, String> paramMap) throws Exception {
+        if (null == paramMap) {
+            throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
+        }
+        String appKey = ConstUtil.APP_KEY_CENTER;
+        String appSecret = ConstUtil.APP_SECRET_CENTER;
+        encrypt4ShopXX(paramMap, appKey, appSecret);
+    }
+
+    /**
+     * 运营中心调用其他应用接口请求参数加密
+     *
+     *
+     */
+    public static void encrypt4ShopXX(final HashMap<String, String> paramMap,
+                                      final String appKey, final String appSecret) throws Exception {
+        if (null == paramMap) {
+            throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
+        }
+//        String timestamp = System.currentTimeMillis() + "";
+        paramMap.put(ConstUtil.API_PARAM_APP_KEY, appKey);
+        paramMap.put(ConstUtil.API_PARAM_TIMESTAMP, paramMap.get("timestamp"));
+        //获取签名
+        String sign = calcSignature4ShopXX(paramMap, appSecret);
+        System.out.println("sign:" + sign);
+        paramMap.put(ConstUtil.API_PARAM_SIGN, sign);
+    }
+    /**
+     * 计算接口签名用来调用shop++
+     *
+     * @param paramMap
+     * @return
+     * @throws IOException
+     */
+    private final static String calcSignature4ShopXX(final Map<String, String> paramMap, final String secret) throws IOException {
+        //计算时移除sign本身
+        paramMap.remove(ConstUtil.API_PARAM_SIGN);
+        // 先将参数以其参数名的字典序升序进行排序
+        Map<String, String> sortedParams = new TreeMap<>(paramMap);
+        // 遍历排序后的字典，将所有参数按"key=value"格式拼接在一起
+        StringBuilder baseString = new StringBuilder(secret);
+        for (Map.Entry<String, String> param : sortedParams.entrySet()) {
+            baseString.append(param.getKey());
+            if (StringUtils.isBlank(param.getValue())) {
+                continue;
+            }
+            //加密时对value值进行urlEncode处理
+            baseString.append(URLEncoder.encode(param.getValue(), "utf8"));
+        }
+        baseString.append(secret);
+        logger.debug("加密原始串(calcSignature4ShopXX)：" + baseString);
+        // 使用MD5对待签名串求签
+        return MD5(baseString.toString()).toUpperCase();
+    }
+
 }

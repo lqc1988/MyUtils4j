@@ -159,4 +159,13 @@ public class ConstUtil {
      * 签名有效期，单位：分钟
      */
     public static final int SIGN_EXPIRE = 3;
+
+    /**
+     * 中心平台appkey
+     */
+    public static final String APP_KEY_CENTER = conf.getString("app.key.center");
+    /**
+     * 中心平台密钥
+     */
+    public static final String APP_SECRET_CENTER = conf.getString("app.secret.center");
 }
