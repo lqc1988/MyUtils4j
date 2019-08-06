@@ -136,36 +136,7 @@ public class ConstUtil {
      * 数据导出每次上线数(1百万)
      */
     public static final int SHEET_ROW_MAX = 1000000;
-    /**
-     * API公共参数--appKey
-     */
-    public static final String API_PARAM_APP_KEY = "appKey";
-    /**
-     * API公共参数--timestamp
-     */
-    public static final String API_PARAM_TIMESTAMP = "timestamp";
-    /**
-     * API公共参数--sign
-     */
-    public static final String API_PARAM_SIGN = "sign";
-    /**
-     * API公共参数--access_token
-     */
-    public static final String API_PARAM_ACCESS_TOKEN = "access_token";
 
     public static final String XMLHttpRequest = "XMLHttpRequest";
 
-    /**
-     * 签名有效期，单位：分钟
-     */
-    public static final int SIGN_EXPIRE = 3;
-
-    /**
-     * 中心平台appkey
-     */
-    public static final String APP_KEY_CENTER = conf.getString("app.key.center");
-    /**
-     * 中心平台密钥
-     */
-    public static final String APP_SECRET_CENTER = conf.getString("app.secret.center");
 }

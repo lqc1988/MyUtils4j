@@ -12,10 +12,7 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * ClassName : SecurityUtil
@@ -27,6 +24,37 @@ public class SecurityUtil {
 //    private static Logger logger = LogManager.getLogger("utils.SecurityUtil");
     private static Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
     /**
+     * API公共参数--appKey
+     */
+    public static final String API_PARAM_APP_KEY = "appKey";
+    /**
+     * API公共参数--timestamp
+     */
+    public static final String API_PARAM_TIMESTAMP = "timestamp";
+    /**
+     * API公共参数--sign
+     */
+    public static final String API_PARAM_SIGN = "sign";
+    /**
+     * API公共参数--access_token
+     */
+    public static final String API_PARAM_ACCESS_TOKEN = "access_token";
+
+    /**
+     * 签名有效期，单位：分钟
+     */
+    public static final int SIGN_EXPIRE = 3;
+
+    public static ResourceBundle conf = ResourceBundle.getBundle("config");
+    /**
+     * 中心平台appkey
+     */
+    public static final String APP_KEY_CENTER = conf.getString("app.key.center");
+    /**
+     * 中心平台密钥
+     */
+    public static final String APP_SECRET_CENTER = conf.getString("app.secret.center");
+    /**
      * 校验接口基础入参
      *
      * @param appSecret
@@ -37,13 +65,13 @@ public class SecurityUtil {
         if (StringUtils.isBlank(appSecret) || null == paramMap || paramMap.isEmpty()) {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
-        String appKey = paramMap.get(ConstUtil.API_PARAM_APP_KEY);
-        String timestamp = paramMap.get(ConstUtil.API_PARAM_TIMESTAMP);
-        String sign = paramMap.get(ConstUtil.API_PARAM_SIGN);
+        String appKey = paramMap.get(API_PARAM_APP_KEY);
+        String timestamp = paramMap.get(API_PARAM_TIMESTAMP);
+        String sign = paramMap.get(API_PARAM_SIGN);
         if (StringUtils.isBlank(appKey) || StringUtils.isBlank(timestamp) || StringUtils.isBlank(sign)) {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
-        if (CommonUtil.compareMinute(new Date(), new Date(Long.parseLong(timestamp))) > ConstUtil.SIGN_EXPIRE) {
+        if (CommonUtil.compareMinute(new Date(), new Date(Long.parseLong(timestamp))) > SIGN_EXPIRE) {
             throw new MyException(ResultEnum.SIGN_INVALID.getDisplay());
         }
         String paraStr= JSONObject.toJSONString(paramMap);
@@ -64,8 +92,8 @@ public class SecurityUtil {
         if (StringUtils.isBlank(appSecret) || null == paramMap || paramMap.isEmpty()) {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
-        String appKey = paramMap.get(ConstUtil.API_PARAM_APP_KEY);
-        String timestamp = paramMap.get(ConstUtil.API_PARAM_TIMESTAMP);
+        String appKey = paramMap.get(API_PARAM_APP_KEY);
+        String timestamp = paramMap.get(API_PARAM_TIMESTAMP);
         if (StringUtils.isBlank(appKey) || StringUtils.isBlank(timestamp)) {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
@@ -81,7 +109,7 @@ public class SecurityUtil {
      */
     private final static String calcSignature(Map<String, String> paramMap, String secret) throws IOException {
         //计算时移除sign本身
-        paramMap.remove(ConstUtil.API_PARAM_SIGN);
+        paramMap.remove(API_PARAM_SIGN);
         // 先将参数以其参数名的字典序升序进行排序
         Map<String, String> sortedParams = new TreeMap<>(paramMap);
         // 遍历排序后的字典，将所有参数按"key=value"格式拼接在一起
@@ -163,8 +191,8 @@ public class SecurityUtil {
         if (null == paramMap) {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
-        String appKey = ConstUtil.APP_KEY_CENTER;
-        String appSecret = ConstUtil.APP_SECRET_CENTER;
+        String appKey = APP_KEY_CENTER;
+        String appSecret = APP_SECRET_CENTER;
         encrypt4ShopXX(paramMap, appKey, appSecret);
     }
 
@@ -179,12 +207,12 @@ public class SecurityUtil {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
 //        String timestamp = System.currentTimeMillis() + "";
-        paramMap.put(ConstUtil.API_PARAM_APP_KEY, appKey);
-        paramMap.put(ConstUtil.API_PARAM_TIMESTAMP, paramMap.get("timestamp"));
+        paramMap.put(API_PARAM_APP_KEY, appKey);
+        paramMap.put(API_PARAM_TIMESTAMP, paramMap.get("timestamp"));
         //获取签名
         String sign = calcSignature4ShopXX(paramMap, appSecret);
         System.out.println("sign:" + sign);
-        paramMap.put(ConstUtil.API_PARAM_SIGN, sign);
+        paramMap.put(API_PARAM_SIGN, sign);
     }
     /**
      * 计算接口签名用来调用shop++
@@ -195,7 +223,7 @@ public class SecurityUtil {
      */
     private final static String calcSignature4ShopXX(final Map<String, String> paramMap, final String secret) throws IOException {
         //计算时移除sign本身
-        paramMap.remove(ConstUtil.API_PARAM_SIGN);
+        paramMap.remove(API_PARAM_SIGN);
         // 先将参数以其参数名的字典序升序进行排序
         Map<String, String> sortedParams = new TreeMap<>(paramMap);
         // 遍历排序后的字典，将所有参数按"key=value"格式拼接在一起
