@@ -20,7 +20,6 @@ import java.util.*;
  * Description : 加密工具类
  */
 public class SecurityUtil {
-//    private static Logger logger = LogManager.getLogger("utils.SecurityUtil");
     private static Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
     /**
      * API公共参数--appKey
@@ -154,20 +153,48 @@ public class SecurityUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        String appSecret = "cd915faaf7b24fbb9002d00e1d1d597b";
+        testSet();
+    }
+    static void testSet(){
+        Set<Integer> aa=new HashSet<>();
+        aa.add(33);
+        int cc=0;
+        for (;;) {
+            cc++;
+            Integer bb=aa.iterator().next();
+            if (null==bb){
+                System.out.println(cc+"次结果为null");
+                break;
+            }
+        }
+    }
+    static void testSub(){
+        Integer a=201905;
+        String b=a.toString();
+        System.out.println(b);
+        System.out.println(b.length());
+        System.out.println(b.substring(0,4)+"-"+b.substring(4,6));
+
+        String c=(--a).toString();
+        System.out.println(c);
+        String d=c.substring(0,4)+"-"+c.substring(4,6);
+        System.out.println(d);
+    }
+    static void testSign() throws Exception{
+        String appSecret = "bfa1ba4a3dac4f18adec949ac00a44d2";
         HashMap<String, String> paramMap = new HashMap<>();
         //接口公共参数
-        paramMap.put("appKey", "5213df89aa4740f998dbb7e53413a01f");
+        paramMap.put("appKey", "ba5e4aa800904377a60c4175030fc6c2");
         String timestamp = System.currentTimeMillis()+"";
         System.out.println("timestamp:"+timestamp);
         paramMap.put("timestamp", timestamp);
-        paramMap.put("tel", "17663202709");
+//        paramMap.put("tel", "13146653605");
 //        paramMap.put("name", "管理后台webAdmin");
 //        paramMap.put("type", "3");
 //        paramMap.put("price", new BigDecimal("0.00").toString());
 //        paramMap.put("categoryId", "351");
 //        paramMap.put("grantAppKey", "c1dfc45857954622865d6a5d112fc65f");
-//        paramMap.put("access_token", "0cc22d6563954578902fc1dd5591ef57");
+        paramMap.put("access_token", "82109d8dca6b4922885ed507e36d11ab");
 //        paramMap.put("serviceId", "fa8c269a8cab434dbca51b97c0bc19e1");
 //        paramMap.put("serialNo", "PB00001000130699");
 //        paramMap.put("serviceType", "0");
