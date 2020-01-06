@@ -466,6 +466,25 @@ public class CommonUtil {
     }
 
     /**
+     * 返回当天年月的字符串
+     *
+     * @return
+     */
+    public static String curMonth() {
+        return formatDateToStr(new Date(), "yyyyMM");
+    }
+
+    /**
+     * 返回上月 年月的字符串
+     *
+     * @return
+     */
+    public static String lastMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        return formatDateToStr(cal.getTime(), "yyyyMM");
+    }
+    /**
      * 获得本周星期一的日期
      *
      * @return
@@ -517,8 +536,11 @@ public class CommonUtil {
         java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
         Set<String> emptyNames = new HashSet<>();
         for (java.beans.PropertyDescriptor pd : pds) {
+            String pdName = pd.getName();
             Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null) emptyNames.add(pd.getName());
+            if (srcValue == null || StringUtils.isBlank(String.valueOf(srcValue))) {
+                emptyNames.add(pdName);
+            }
         }
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
