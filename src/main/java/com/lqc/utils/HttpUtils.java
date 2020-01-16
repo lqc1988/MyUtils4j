@@ -33,15 +33,15 @@ public class HttpUtils {
     //    private static Logger logger = LogManager.getLogger("utils.HttpUtils");
     private static Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 
-    private static HttpPost assembleHttpPost(String url, Map<String, String> headMap, Map<String, String> paramMap,
+    private static HttpPost assembleHttpPost(String url, Map<String, String> headMap, Map<String, Object> paramMap,
                                     String body) throws Exception{
         String opt = "发送POST请求";
         HttpPost httpPost = new HttpPost(url);
         List<NameValuePair> paraList = new ArrayList<>();
         if (null != paramMap) {
-            for (Map.Entry<String, String> entry : paramMap.entrySet()) {
-                paraList.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-                logger.debug(opt + ",入参==>" + entry.getKey() + ":" + entry.getValue());
+            for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
+                paraList.add(new BasicNameValuePair(entry.getKey(), entry.getValue()+""));
+                //logger.debug(opt + ",入参==>" + entry.getKey() + ":" + entry.getValue());
             }
         }
         httpPost.setEntity(new UrlEncodedFormEntity(paraList, "UTF-8"));
@@ -69,7 +69,7 @@ public class HttpUtils {
      * @return
      * @throws Exception
      */
-    public static String post(String url, Map<String, String> headMap, Map<String, String> paramMap)
+    public static String post(String url, Map<String, String> headMap, Map<String, Object> paramMap)
             throws Exception {
         return post(url, headMap, paramMap, null);
     }
@@ -84,7 +84,7 @@ public class HttpUtils {
      * @return String
      * @throws Exception
      */
-    public static String post(String url, Map<String, String> headMap, Map<String, String> paramMap,
+    public static String post(String url, Map<String, String> headMap, Map<String, Object> paramMap,
                               String body) throws Exception {
         String opt = "发送POST请求";
         String result = null;
@@ -117,7 +117,7 @@ public class HttpUtils {
      * @return byte[]
      */
     public static byte[] postByte(String url, Map<String, String> headMap,
-                                  Map<String, String> paramMap)  throws Exception {
+                                  Map<String, Object> paramMap)  throws Exception {
         String opt = "发送POST请求";
         byte[] result = null;
         CloseableHttpResponse response = null;

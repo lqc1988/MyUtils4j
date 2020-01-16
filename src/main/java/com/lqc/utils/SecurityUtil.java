@@ -213,7 +213,7 @@ public class SecurityUtil {
      *
      *
      */
-    public static void encrypt4ShopXX(final HashMap<String, String> paramMap) throws Exception {
+    public static void encrypt4ShopXX(final HashMap<String, Object> paramMap) throws Exception {
         if (null == paramMap) {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
@@ -227,14 +227,14 @@ public class SecurityUtil {
      *
      *
      */
-    public static void encrypt4ShopXX(final HashMap<String, String> paramMap,
+    public static void encrypt4ShopXX(final HashMap<String, Object> paramMap,
                                       final String appKey, final String appSecret) throws Exception {
         if (null == paramMap) {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
-//        String timestamp = System.currentTimeMillis() + "";
+        String timestamp = System.currentTimeMillis() + "";
         paramMap.put(API_PARAM_APP_KEY, appKey);
-        paramMap.put(API_PARAM_TIMESTAMP, paramMap.get("timestamp"));
+        paramMap.put(API_PARAM_TIMESTAMP, timestamp);
         //获取签名
         String sign = calcSignature4ShopXX(paramMap, appSecret);
         System.out.println("sign:" + sign);
@@ -247,23 +247,23 @@ public class SecurityUtil {
      * @return
      * @throws IOException
      */
-    private final static String calcSignature4ShopXX(final Map<String, String> paramMap, final String secret) throws IOException {
+    private final static String calcSignature4ShopXX(final Map<String, Object> paramMap, final String secret) throws IOException {
         //计算时移除sign本身
         paramMap.remove(API_PARAM_SIGN);
         // 先将参数以其参数名的字典序升序进行排序
-        Map<String, String> sortedParams = new TreeMap<>(paramMap);
+        Map<String, Object> sortedParams = new TreeMap<>(paramMap);
         // 遍历排序后的字典，将所有参数按"key=value"格式拼接在一起
         StringBuilder baseString = new StringBuilder(secret);
-        for (Map.Entry<String, String> param : sortedParams.entrySet()) {
+        for (Map.Entry<String, Object> param : sortedParams.entrySet()) {
             baseString.append(param.getKey());
-            if (StringUtils.isBlank(param.getValue())) {
+            if (StringUtils.isBlank(param.getValue()+"")) {
                 continue;
             }
             //加密时对value值进行urlEncode处理
-            baseString.append(URLEncoder.encode(param.getValue(), "utf8"));
+            baseString.append(URLEncoder.encode(param.getValue()+"", "utf8"));
         }
         baseString.append(secret);
-        logger.debug("加密原始串(calcSignature4ShopXX)：" + baseString);
+        //logger.debug("加密原始串(calcSignature4ShopXX)：" + baseString);
         // 使用MD5对待签名串求签
         return MD5(baseString.toString()).toUpperCase();
     }
