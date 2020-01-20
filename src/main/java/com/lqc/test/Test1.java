@@ -4,6 +4,11 @@ import com.lqc.utils.CommonUtil;
 import com.lqc.utils.ConstUtil;
 
 import java.net.InetAddress;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * ClassName : Test1
@@ -25,7 +30,15 @@ public class Test1 {
 //            System.out.println("getHostAddress:"+InetAddress.getLocalHost().getHostAddress());
 //            testStr();
 
-            System.out.print(CommonUtil.lastMonth());
+            //System.out.print(CommonUtil.lastMonth());
+            Calendar c1=Calendar.getInstance();
+            c1.setTime(new Date());
+            Calendar c2=Calendar.getInstance();
+            c2.setTime(new Date());
+            //c2.add(Calendar.MONTH,1);
+            c2.add(Calendar.MONTH,2);
+            System.out.print(sameYearMonth(c1.getTime(),c2.getTime()));
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -34,5 +47,12 @@ public class Test1 {
         for (int i = 0; i < 65534; i++) {
             System.out.print("a");
         }
+    }
+    static boolean sameYearMonth(Date d1, Date d2) {
+        Calendar c1=Calendar.getInstance();
+        c1.setTime(d1);
+        Calendar c2=Calendar.getInstance();
+        c2.setTime(d2);
+        return c1.get(Calendar.YEAR)==c2.get(Calendar.YEAR)&&c1.get(Calendar.MONTH)==c2.get(Calendar.MONTH);
     }
 }
