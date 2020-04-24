@@ -16,6 +16,9 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,8 +31,17 @@ import java.util.regex.Pattern;
  * Description : 通用工具类
  */
 public class CommonUtil {
-//    private static Logger logger = LogManager.getLogger("utils.CommonUtil");
+    //    private static Logger logger = LogManager.getLogger("utils.CommonUtil");
     private static Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+
+    /**
+     * 当前格式化时间字符串
+     *
+     * @return
+     */
+    public static String nowStr() {
+        return formatDateToStr(new Date(), "yyyy-MM-dd HH:mm:ss");
+    }
 
     /**
      * 获取真实的请求IP地址
@@ -59,27 +71,28 @@ public class CommonUtil {
 
     /**
      * 获取本机IP
+     *
      * @return
      */
-    public static String getLocalIP(){
-        try{
+    public static String getLocalIP() {
+        try {
             Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
-            while (allNetInterfaces.hasMoreElements()){
+            while (allNetInterfaces.hasMoreElements()) {
                 NetworkInterface netInterface = allNetInterfaces.nextElement();
                 Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
-                while (addresses.hasMoreElements()){
-                    InetAddress ip =  addresses.nextElement();
+                while (addresses.hasMoreElements()) {
+                    InetAddress ip = addresses.nextElement();
                     if (ip != null
                             && ip instanceof Inet4Address
                             && !ip.isLoopbackAddress()
-                            && ip.getHostAddress().indexOf(":")==-1){
+                            && ip.getHostAddress().indexOf(":") == -1) {
                         //loopback地址即本机地址，IPv4的loopback范围是127.0.0.0 ~ 127.255.255.255
                         System.out.println("本机的IP = " + ip.getHostAddress());
                         return ip.getHostAddress();
                     }
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -157,10 +170,21 @@ public class CommonUtil {
      * @param smallTime 小时间
      * @return
      */
-    public static int compareDay(Date bigTime, Date smallTime) {
-        long timeDif = 0;
-        timeDif = (bigTime.getTime() - smallTime.getTime()) / (1000 * 60 * 60 * 24);
-        return (int) timeDif;
+    public static long compareDay(Date bigTime, Date smallTime) {
+        return sameDate(bigTime, smallTime) ? 0 : (bigTime.getTime() - smallTime.getTime()) / (1000 * 60 * 60 * 24) + 1;
+    }
+
+    /**
+     * 比较两个java.util.Date 的日期（年月日）是否相同（忽略时、分、秒）
+     *
+     * @param d1
+     * @param d2
+     * @return
+     */
+    public static boolean sameDate(Date d1, Date d2) {
+        LocalDate localDate1 = ZonedDateTime.ofInstant(d1.toInstant(), ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate2 = ZonedDateTime.ofInstant(d2.toInstant(), ZoneId.systemDefault()).toLocalDate();
+        return localDate1.isEqual(localDate2);
     }
 
 
@@ -172,10 +196,11 @@ public class CommonUtil {
      * @return
      */
     public static Date formatStrToDate(String dateTimeStr, String pattern) throws Exception {
-        pattern=(StringUtils.isBlank(pattern))?"yyyyMMddHHmmss":pattern;
+        pattern = (StringUtils.isBlank(pattern)) ? "yyyyMMddHHmmss" : pattern;
         SimpleDateFormat df = new SimpleDateFormat(pattern);
         return df.parse(dateTimeStr);
     }
+
     /**
      * 将时间转换成指定格式
      *
@@ -183,7 +208,7 @@ public class CommonUtil {
      * @return
      */
     public static String formatDateToStr(Date dateTime, String pattern) {
-        pattern=(StringUtils.isBlank(pattern))?"yyyyMMddHHmmss":pattern;
+        pattern = (StringUtils.isBlank(pattern)) ? "yyyyMMddHHmmss" : pattern;
         DateFormat df = new SimpleDateFormat(pattern);
         return df.format(dateTime);
     }
@@ -195,7 +220,7 @@ public class CommonUtil {
      * @return
      */
     public static Date formatDate(Date dateTime, String pattern) throws Exception {
-        pattern=(StringUtils.isBlank(pattern))?"yyyyMMddHHmmss":pattern;
+        pattern = (StringUtils.isBlank(pattern)) ? "yyyyMMddHHmmss" : pattern;
         DateFormat df = new SimpleDateFormat(pattern);
         return df.parse(df.format(dateTime));
     }
@@ -208,7 +233,7 @@ public class CommonUtil {
      * @return
      */
     public static String formatDateStr(String orgDate, String pattern) throws Exception {
-        pattern=(StringUtils.isBlank(pattern))?"yyyy-MM-dd":pattern;
+        pattern = (StringUtils.isBlank(pattern)) ? "yyyy-MM-dd" : pattern;
         DateFormat df = new SimpleDateFormat(pattern);
         return df.format(df.parse(orgDate));
     }
@@ -241,7 +266,7 @@ public class CommonUtil {
      * @return
      */
     public static String getFirstDayOfMonth(Date monthDate, String pattern) {
-        pattern=(StringUtils.isBlank(pattern))?"yyyy-MM-dd HH:mm:ss":pattern;
+        pattern = (StringUtils.isBlank(pattern)) ? "yyyy-MM-dd HH:mm:ss" : pattern;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(monthDate);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -266,7 +291,7 @@ public class CommonUtil {
      * @return
      */
     public static String getLastDayOfMonth(Date monthDate, String pattern) {
-        pattern=(StringUtils.isBlank(pattern))?"yyyy-MM-dd HH:mm:ss":pattern;
+        pattern = (StringUtils.isBlank(pattern)) ? "yyyy-MM-dd HH:mm:ss" : pattern;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(monthDate);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -301,8 +326,9 @@ public class CommonUtil {
         if (len < 2) {
             return orgNum;
         }
-        return  bg.setScale(len, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return bg.setScale(len, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
+
     /**
      * 十六进制编码转字符串
      *
@@ -310,7 +336,7 @@ public class CommonUtil {
      * @return
      */
     public static String hex2Str(String org) {
-        if (StringUtils.isBlank(org)){
+        if (StringUtils.isBlank(org)) {
             return org;
         }
         if ("0x".equals(org.substring(0, 2))) {
@@ -339,7 +365,7 @@ public class CommonUtil {
      * @return
      */
     public static String str2Hex(String org) {
-        if (StringUtils.isBlank(org)){
+        if (StringUtils.isBlank(org)) {
             return "0x0";
         }
         String str = "";
@@ -352,6 +378,7 @@ public class CommonUtil {
 
     /**
      * 打印十六进制字符串
+     *
      * @param b
      */
     public static void printHex(byte[] b) {
@@ -395,6 +422,7 @@ public class CommonUtil {
             e.printStackTrace();
         }
     }
+
     /**
      * 获取指定时间所属当年第几周
      *
@@ -484,6 +512,7 @@ public class CommonUtil {
         cal.add(Calendar.MONTH, -1);
         return formatDateToStr(cal.getTime(), "yyyyMM");
     }
+
     /**
      * 获得本周星期一的日期
      *
@@ -587,7 +616,8 @@ public class CommonUtil {
         result = Float.parseFloat(nf.format(num).replaceAll(",", ""));
         return result;
     }
-    static String[] calcLast(String left,String s,String g){
+
+    static String[] calcLast(String left, String s, String g) {
         if (left.indexOf("十") != -1) {
             String[] gArr = left.split("十");
             s = gArr[0];
@@ -598,8 +628,9 @@ public class CommonUtil {
                 g = left.split("十")[1];
             }
         }
-        return new String[]{s,g};
+        return new String[]{s, g};
     }
+
     /**
      * 从中文字符串中找出数字并转换
      * 局限：仅转换第一个符合条件的数字,十万及以上不支持
@@ -643,9 +674,9 @@ public class CommonUtil {
                             b = b.split("千")[1];
                         }
                     }
-                    String[] lastArr=  calcLast(left,s,g);
-                    s=lastArr[0];
-                    g=lastArr[1];
+                    String[] lastArr = calcLast(left, s, g);
+                    s = lastArr[0];
+                    g = lastArr[1];
                     mStr = mStr.substring(mStr.indexOf("零") + 1, mStr.length());
                 }
             }
@@ -663,9 +694,9 @@ public class CommonUtil {
                             b = b.split("千")[1];
                         }
                     }
-                    String[] lastArr=  calcLast(left,s,g);
-                    s=lastArr[0];
-                    g=lastArr[1];
+                    String[] lastArr = calcLast(left, s, g);
+                    s = lastArr[0];
+                    g = lastArr[1];
                     mStr = mStr.substring(mStr.indexOf("零") + 1, mStr.length());
                 }
             }
@@ -677,16 +708,16 @@ public class CommonUtil {
                 mStr = bArr[1];
                 if (mStr.indexOf("零") != -1) {
                     String left = mStr.substring(0, mStr.indexOf("零"));
-                    String[] lastArr=  calcLast(left,s,g);
-                    s=lastArr[0];
-                    g=lastArr[1];
+                    String[] lastArr = calcLast(left, s, g);
+                    s = lastArr[0];
+                    g = lastArr[1];
                     mStr = mStr.substring(mStr.indexOf("零") + 1, mStr.length());
                 }
             }
         }
-        String[] lastArr=  calcLast(mStr,s,g);
-        s=lastArr[0];
-        g=lastArr[1];
+        String[] lastArr = calcLast(mStr, s, g);
+        s = lastArr[0];
+        g = lastArr[1];
         if (StringUtils.isNotBlank(mStr) && StringUtils.isBlank(w)
                 && StringUtils.isBlank(q) && StringUtils.isBlank(b)
                 && StringUtils.isBlank(s)) {
