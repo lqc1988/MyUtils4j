@@ -10,12 +10,15 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 import javax.servlet.http.HttpServletRequest;
+import java.beans.PropertyDescriptor;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -23,16 +26,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-/**
- * ClassName : CommonUtil
- * Author : liqinchao
- * CreateTime : 2019/3/18 18:11
- * Description : 通用工具类
- */
 public class CommonUtil {
-    //    private static Logger logger = LogManager.getLogger("utils.CommonUtil");
     private static Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+    private static Pattern numPattern = Pattern.compile("[0-9]*");
 
     /**
      * 当前格式化时间字符串
@@ -98,6 +94,7 @@ public class CommonUtil {
         return null;
     }
 
+
     /**
      * 根据指定的新字符替换指定的原字符
      *
@@ -121,8 +118,9 @@ public class CommonUtil {
      * @return
      */
     public static String replaceTineBrackets(String str) {
-        if (str == null)
+        if (str == null) {
             return null;
+        }
 
         String tmp = str.replace("<", "&lt;").replace(">", "&gt;");
         return tmp;
@@ -145,8 +143,7 @@ public class CommonUtil {
      * @return
      */
     public static boolean isNumeric(String str) {
-        Pattern pattern = Pattern.compile("[0-9]*");
-        return pattern.matcher(str).matches();
+        return numPattern.matcher(str).matches();
     }
 
     /**
@@ -160,8 +157,9 @@ public class CommonUtil {
         if (null == bigTime || null == smallTime) {
             throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
         }
-        return (int) (bigTime.getTime() - smallTime.getTime()) / (1000 * 60);
+        return (int) ((bigTime.getTime() - smallTime.getTime()) / (1000 * 60));
     }
+
 
     /**
      * 比较两个时间的天数差
@@ -185,6 +183,21 @@ public class CommonUtil {
         LocalDate localDate1 = ZonedDateTime.ofInstant(d1.toInstant(), ZoneId.systemDefault()).toLocalDate();
         LocalDate localDate2 = ZonedDateTime.ofInstant(d2.toInstant(), ZoneId.systemDefault()).toLocalDate();
         return localDate1.isEqual(localDate2);
+    }
+
+    /**
+     * 判断年月是否相同
+     *
+     * @param d1
+     * @param d2
+     * @return
+     */
+    public static boolean sameYearMonth(Date d1, Date d2) {
+        Calendar c1 = Calendar.getInstance();
+        c1.setTime(d1);
+        Calendar c2 = Calendar.getInstance();
+        c2.setTime(d2);
+        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH);
     }
 
 
@@ -226,6 +239,21 @@ public class CommonUtil {
     }
 
     /**
+     * 日期增加天数
+     *
+     * @param oDate   原日期
+     * @param addDays 增加天数
+     * @return
+     * @throws Exception
+     */
+    public static Date addDay(Date oDate, int addDays) throws Exception {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(oDate);
+        cal.add(Calendar.DATE, addDays);
+        return cal.getTime();
+    }
+
+    /**
      * 将时间转换成指定格式字符串
      *
      * @param orgDate
@@ -237,6 +265,45 @@ public class CommonUtil {
         DateFormat df = new SimpleDateFormat(pattern);
         return df.format(df.parse(orgDate));
     }
+
+    /**
+     * 返回当天年月的字符串
+     *
+     * @return
+     */
+    public static String curMonth() {
+        return formatDateToStr(new Date(), "yyyyMM");
+    }
+
+    /**
+     * 返回上月 年月的字符串
+     *
+     * @return
+     */
+    public static String lastMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        return formatDateToStr(cal.getTime(), "yyyyMM");
+    }
+
+    /**
+     * 返回当天年月日的字符串
+     *
+     * @return
+     */
+    public static String today() {
+        return formatDateToStr(new Date(), "yyyyMMdd");
+    }
+
+    /**
+     * 返回当前时间精确到秒的字符串
+     *
+     * @return
+     */
+    public static String now() {
+        return formatDateToStr(new Date(), null);
+    }
+
 
     /**
      * 获取指定日期的00:00:00时间串
@@ -255,6 +322,28 @@ public class CommonUtil {
      * @return
      */
     public static String getEndTime(Date date) {
+        return formatDateToStr(date, "yyyy-MM-dd") + " 23:59:59";
+    }
+
+    /**
+     * 获取指定日期的00:00:00时间串
+     *
+     * @param dateStr
+     * @return
+     */
+    public static String getStartTimeFromStr(String dateStr) throws Exception {
+        Date date = formatStrToDate(dateStr, "yyyy-MM-dd");
+        return formatDateToStr(date, "yyyy-MM-dd") + " 00:00:00";
+    }
+
+    /**
+     * 获取指定日期的23:59:59时间串
+     *
+     * @param dateStr
+     * @return
+     */
+    public static String getEndTimeFromStr(String dateStr) throws Exception {
+        Date date = formatStrToDate(dateStr, "yyyy-MM-dd");
         return formatDateToStr(date, "yyyy-MM-dd") + " 23:59:59";
     }
 
@@ -326,7 +415,7 @@ public class CommonUtil {
         if (len < 2) {
             return orgNum;
         }
-        return bg.setScale(len, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return bg.setScale(len, BigDecimal.ROUND_HALF_EVEN).doubleValue();
     }
 
     /**
@@ -418,6 +507,8 @@ public class CommonUtil {
 //            System.out.println(dealFloatNum(1000f,2));
 //            String aa = "体验馆 二十次卡会员";
 //            System.out.println("aaa=" + findZhNumToInt(aa));
+//            System.out.println("aaa=" + lastMonth());
+            System.out.println("aaa=" + checkMobile("15910873370e"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -494,26 +585,6 @@ public class CommonUtil {
     }
 
     /**
-     * 返回当天年月的字符串
-     *
-     * @return
-     */
-    public static String curMonth() {
-        return formatDateToStr(new Date(), "yyyyMM");
-    }
-
-    /**
-     * 返回上月 年月的字符串
-     *
-     * @return
-     */
-    public static String lastMonth() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -1);
-        return formatDateToStr(cal.getTime(), "yyyyMM");
-    }
-
-    /**
      * 获得本周星期一的日期
      *
      * @return
@@ -558,21 +629,48 @@ public class CommonUtil {
      * 获取对象属性为null的属性名数组
      *
      * @param bean
+     * @param ignoreList 忽略字段列表
      * @return
      */
-    public static String[] getNullPropertyNames(Object bean) {
-        final BeanWrapper src = new BeanWrapperImpl(bean);
-        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+    public static String[] getNullPropertyNames(Object bean, List<String> ignoreList) throws Exception {
+        Set<String> emptyNames = getNullPropertySet(bean);
+        if (null != ignoreList && !ignoreList.isEmpty()) {
+            emptyNames.addAll(ignoreList);
+        }
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
+    }
+
+    /**
+     * 获取对象属性为null的属性名数组
+     *
+     * @param bean
+     * @return
+     */
+    public static String[] getNullPropertyNames(Object bean) throws Exception {
+        Set<String> emptyNames = getNullPropertySet(bean);
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
+    }
+
+    /**
+     * 获取实体中值为null的字段名集合
+     *
+     * @param bean
+     * @return
+     */
+    public static Set<String> getNullPropertySet(Object bean) {
         Set<String> emptyNames = new HashSet<>();
-        for (java.beans.PropertyDescriptor pd : pds) {
+        final BeanWrapper src = new BeanWrapperImpl(bean);
+        PropertyDescriptor[] pds = src.getPropertyDescriptors();
+        for (PropertyDescriptor pd : pds) {
             String pdName = pd.getName();
-            Object srcValue = src.getPropertyValue(pd.getName());
+            Object srcValue = src.getPropertyValue(pdName);
             if (srcValue == null || StringUtils.isBlank(String.valueOf(srcValue))) {
                 emptyNames.add(pdName);
             }
         }
-        String[] result = new String[emptyNames.size()];
-        return emptyNames.toArray(result);
+        return emptyNames;
     }
 
     /**
@@ -580,7 +678,6 @@ public class CommonUtil {
      *
      * @param str
      * @return
-     * @throws Exception
      */
     public static String stringFilter(String str) {
         String result = str;
@@ -603,7 +700,6 @@ public class CommonUtil {
      * @param num 原数值
      * @param len 保留位数
      * @return
-     * @throws Exception
      */
     public static float scaleFloat(Float num, int len) {
         float result = 0f;
@@ -784,6 +880,7 @@ public class CommonUtil {
         return uuid;
     }
 
+
     /**
      * 获取请求的完整URL
      *
@@ -800,6 +897,7 @@ public class CommonUtil {
         }
         return protocol + host + uri;
     }
+
 
     /**
      * 获取请求的协议+域名
@@ -826,7 +924,6 @@ public class CommonUtil {
     public static String getUrlHost(String url) {
         String host = null;
         try {
-            //获取值转换为小写
             host = new URL(url).getHost().toLowerCase();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -872,12 +969,12 @@ public class CommonUtil {
      * @param phone
      * @return
      */
-    public static boolean isPhone(String phone) {
+    public static boolean isPhone(String phone) throws Exception {
         boolean flag = false;
         final int length = 11;
         String regex = "^((13[0-9])|(14[5,7,9])|(15([0-3]|[5-9]))|(166)|(17[0,1,3,5,6,7,8])|(18[0-9])|(19[8|9]))\\d{8}$";
         if (phone.length() != length) {
-            throw new RuntimeException("手机号应为11位数");
+            throw new MyException("手机号应为11位数字");
         } else {
             Pattern p = Pattern.compile(regex);
             Matcher m = p.matcher(phone);
@@ -889,10 +986,9 @@ public class CommonUtil {
     /**
      * 格式化BigDecimal保留位数
      *
-     * @param num
-     * @param len
+     * @param num 原数字
+     * @param len 保留位数
      * @return
-     * @throws Exception
      */
     public static BigDecimal scaleBigDecimal(BigDecimal num, int len) throws Exception {
         if (null == num) {
@@ -909,11 +1005,31 @@ public class CommonUtil {
     }
 
     /**
+     * BigDecimal转String
+     *
+     * @param num 原数字
+     * @param len 保留位数
+     * @return
+     */
+    public static String bigDecimal2Str(BigDecimal num, int len) throws Exception {
+        if (null == num) {
+            throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
+        }
+        String scaleStr = "#.00";//默认保留两位
+        if (len > 2) {
+            for (int i = 0; i < len - 2; i++) {
+                scaleStr += "0";
+            }
+        }
+        DecimalFormat df = new DecimalFormat(scaleStr);
+        return df.format(num);
+    }
+
+    /**
      * 字符串转为UTF-8格式
      *
      * @param str
      * @return
-     * @throws Exception
      */
     public static String str2UTF8(String str) throws Exception {
         if (str.equals(new String(str.getBytes("iso8859-1"), "iso8859-1"))) {
@@ -922,6 +1038,7 @@ public class CommonUtil {
         }
         return str;
     }
+
 
     /**
      * 处理中文文件名
@@ -939,5 +1056,180 @@ public class CommonUtil {
         }
         return fileNameCN;
     }
+    /**
+     * 生成文件
+     *
+     * @return
+     */
+    public static String mkFileDir(String path, String fileName) {
+        SimpleDateFormat df1 = new SimpleDateFormat("yyyy");
+        SimpleDateFormat df2 = new SimpleDateFormat("MMdd");
+        String dir1 = df1.format(new Date());
+        String dir2 = df2.format(new Date());
+        String cPath = dir1 + "/" + dir2 + "/";
+        String localFilePath = path + cPath;
+        String uuid = UUID.randomUUID().toString();
+        fileName = uuid + "." + getExtensionName(fileName);
+        return localFilePath + fileName;
+    }
 
+    /**
+     * 生成文件(保留原名)
+     *
+     * @return
+     */
+    public static String mkFileDir(String path) {
+        SimpleDateFormat df1 = new SimpleDateFormat("yyyyMM");
+        SimpleDateFormat df2 = new SimpleDateFormat("dd");
+        String dir1 = df1.format(new Date());
+        String dir2 = df2.format(new Date());
+        String cPath = dir1 + "/" + dir2 + "/";
+        String localFilePath = path + cPath;
+        return localFilePath;
+    }
+
+    /**
+     * 生成文件(前缀时间)
+     *
+     * @return
+     */
+    public static String mkFileDirByTime(String path) {
+        SimpleDateFormat df1 = new SimpleDateFormat("yyyyMM");
+        SimpleDateFormat df2 = new SimpleDateFormat("dd");
+        String dir1 = df1.format(new Date());
+        String dir2 = df2.format(new Date());
+        String cPath = dir1 + "/" + dir2 + "/" + System.currentTimeMillis();
+        String localFilePath = path + cPath;
+        return localFilePath;
+    }
+
+    /**
+     * 获取文件的扩展名
+     *
+     * @param filename
+     * @return
+     */
+    public static String getExtensionName(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            int dot = filename.lastIndexOf('.');
+            if ((dot > -1) && (dot < (filename.length() - 1))) {
+                return filename.substring(dot + 1);
+            }
+        }
+        return filename;
+    }
+
+    /**
+     * 字符串首字母如果转换为小写
+     *
+     * @return
+     */
+    public static String firstTolowCae(String str) throws Exception {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (StringUtils.isNotBlank(str) && str.length() > 0) {
+            String s = str.substring(0, 1).toLowerCase();
+            stringBuilder.append(s);
+        }
+        if (StringUtils.isNotBlank(str) && str.length() > 1) {
+            String substring = str.substring(1);
+            stringBuilder.append(substring);
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * List深度copy
+     *
+     * @param src
+     * @param <T>
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static <T> List<T> deepCopy(List<T> src) throws IOException, ClassNotFoundException {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(byteOut);
+        out.writeObject(src);
+
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+        ObjectInputStream in = new ObjectInputStream(byteIn);
+        @SuppressWarnings("unchecked")
+        List<T> dest = (List<T>) in.readObject();
+        return dest;
+    }
+
+    /**
+     * Date translate to LocalDate
+     *
+     * @Param [import_day]
+     * @Return java.time.LocalDate
+     * @Author wanggaojian
+     * @Date 2019/10/21
+     * @Time 14:24
+     */
+    public static LocalDate DateToLocalDate(Date import_day) {
+        if (import_day == null) {
+            return null;
+        }
+        Instant instant = import_day.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        return instant.atZone(zoneId).toLocalDate();
+    }
+
+    /**
+     * 组装账单起止时间
+     *
+     * @param billMonth
+     * @return
+     * @throws Exception
+     */
+    public static Map<String, String> assembleBillMonthMap(Integer billMonth) throws Exception {
+        Map<String, String> billMonthMap = new HashMap<>();
+        String month_start = billMonth.toString();
+        if (month_start.length() != 6) {
+            throw new MyException(ResultEnum.ERR_PARAM.getDisplay());
+        }
+        String start = month_start.substring(0, 4) + "-" + month_start.substring(4, 6) + "-01 00:00:00";
+        String month_end = (++billMonth).toString();
+        String end = month_end.substring(0, 4) + "-" + month_end.substring(4, 6) + "-01 00:00:00";
+        billMonthMap.put("start", start);
+        billMonthMap.put("end", end);
+        return billMonthMap;
+    }
+
+    /**
+     * 处理账期，默认上月
+     *
+     * @return
+     */
+    public static Integer assembleBillMonth(Integer billMonth) {
+        if (null == billMonth) {
+            billMonth = Integer.parseInt(lastMonth());
+        }
+        return billMonth;
+    }
+
+    public static boolean checkMobile(String tel) {
+        if (StringUtils.isBlank(tel)) {
+            return false;
+        }
+        String regExp = "^1\\d{10}$";
+        Pattern p = Pattern.compile(regExp);
+        Matcher m = p.matcher(tel);
+        return m.matches();
+    }
+
+    /**
+     * 手机号中间4位替换为****
+     *
+     * @param phone
+     * @return
+     * @throws Exception
+     */
+    public static String encryptPhone(String phone) throws Exception {
+        if (StringUtils.isBlank(phone)) {
+            throw new MyException("参数不能为空");
+        }
+        return phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+    }
 }

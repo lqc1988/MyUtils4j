@@ -1,8 +1,6 @@
 package com.lqc.util;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
-import exception.HxException;
+import com.lqc.exception.MyException;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.mail.Address;
@@ -31,25 +29,24 @@ public class EmailUtil {
     /**
      * 配置文件
      */
-    public static Config conf = ConfigFactory.load();
-    public static final String FROM_NAME = conf.getString("email.server.fromName");
+    public static final String FROM_NAME = ConstUtil.conf.getString("email.server.fromName");
     // 发件人的邮箱
-    public static final String FROM_ADDR = conf.getString("email.server.fromAddr");
+    public static final String FROM_ADDR = ConstUtil.conf.getString("email.server.fromAddr");
     // 发件人的密码/授权码
     // PS: 某些邮箱服务器为了增加邮箱本身密码的安全性，给 SMTP 客户端设置了独立密码（有的邮箱称为“授权码”）,
     //     对于开启了独立密码的邮箱, 这里的邮箱密码必需使用这个独立密码（授权码）。
-    public static final String FROM_PWD = conf.getString("email.server.fromPwd");
+    public static final String FROM_PWD = ConstUtil.conf.getString("email.server.fromPwd");
     //private static String fromName = "恒信东方";
     //private static String fromAddr = "actionabc@163.com";
     //private static String fromPwd = "XXNZXBXUERNJSBAG";
 
     // 发件人邮箱的 SMTP 服务器地址, 必须准确, 不同邮件服务器地址不同, 一般(只是一般, 绝非绝对)格式为: smtp.xxx.com
     // 网易126邮箱的 SMTP 服务器地址为: smtp.126.com
-    private static final String SMTP_HOST = conf.getString("email.server.smtpHost");
+    private static final String SMTP_HOST = ConstUtil.conf.getString("email.server.smtpHost");
     //端口号
-    private static final String SMTP_PORT = conf.getString("email.server.smtpPort");
+    private static final String SMTP_PORT = ConstUtil.conf.getString("email.server.smtpPort");
     //当前模式：prod-生产，test-测试，dev-研发
-    private static final String MOD = conf.getString("email.server.mod");
+    private static final String MOD = ConstUtil.conf.getString("email.server.mod");
 
 
     /**
@@ -107,7 +104,7 @@ public class EmailUtil {
      */
     public static void sendEmail(String destAddr, String destName, String subject, String content, String type,Properties props) throws Exception {
         if (StringUtils.isBlank(destAddr) || StringUtils.isBlank(destName) || StringUtils.isBlank(subject) || StringUtils.isBlank(content)) {
-            throw new HxException("参数错误");
+            throw new MyException("参数错误");
         }
         List<DestDTO> destList = new ArrayList<>();
         DestDTO dest = new DestDTO();
@@ -129,7 +126,7 @@ public class EmailUtil {
      */
     public static void sendEmail(List<DestDTO> destList, String subject, String content, String type,Properties props) throws Exception {
         if (null == destList || destList.isEmpty() || StringUtils.isBlank(subject) || StringUtils.isBlank(content)) {
-            throw new HxException("参数错误");
+            throw new MyException("参数错误");
         }
         type = StringUtils.isBlank(type) ? "text/html;charset=UTF-8" : type;
 

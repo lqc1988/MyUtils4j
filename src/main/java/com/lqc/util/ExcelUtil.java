@@ -64,7 +64,7 @@ public class ExcelUtil {
     public static Workbook fillExcelDataWithTemplate(ResultSet rs, String templateFile
             , String datePattern) throws Exception {
         //首先:从本地磁盘读取模板excel文件,然后读取第一个sheet
-        InputStream inp = util.ExcelUtil.class.getResourceAsStream(templateFile);
+        InputStream inp = ExcelUtil.class.getResourceAsStream(templateFile);
         POIFSFileSystem fs = new POIFSFileSystem(inp);
         Workbook wb = new HSSFWorkbook(fs);
         Sheet sheet = wb.getSheetAt(0);

@@ -31,7 +31,7 @@ public class ImageGenerator {
 
 	private static String chars = charsLong;
 
-	public static util.ImageGenerator make() {
+	public static ImageGenerator make() {
 		int charsLength = chars.length();
 		int width = 68, height = 21;
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -69,7 +69,7 @@ public class ImageGenerator {
 		g.dispose();
 
 		// 生成图片完毕
-		util.ImageGenerator result = new util.ImageGenerator();
+		ImageGenerator result = new ImageGenerator();
 		result.imgCode = sRand.toString();
 		result.image = image;
 		return result;

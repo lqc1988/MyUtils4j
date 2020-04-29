@@ -29,7 +29,7 @@ public class ImageGeneratorFZ {
 		return new Color(r, g, b);
 	}
 
-	public static util.ImageGeneratorFZ make() {
+	public static ImageGeneratorFZ make() {
 		int width = 100, height = 40;
 		int red = 0, green = 0, blue = 0;
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -121,7 +121,7 @@ public class ImageGeneratorFZ {
 		g.dispose();
 
 		// 生成图片完毕
-		util.ImageGeneratorFZ result = new util.ImageGeneratorFZ();
+		ImageGeneratorFZ result = new ImageGeneratorFZ();
 		result.imgCode = String.valueOf(dd);
 		result.image = image;
 		return result;

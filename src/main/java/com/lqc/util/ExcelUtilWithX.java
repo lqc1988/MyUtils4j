@@ -1,5 +1,6 @@
 package com.lqc.util;
 
+import com.lqc.vo.ErrorDataExcel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -9,7 +10,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import vo.ErrorDataExcel;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,7 +71,7 @@ public class ExcelUtilWithX {
     public static Workbook fillExcelDataWithTemplate(ResultSet rs, String templateFile
             , String datePattern) throws Exception {
         //首先:从本地磁盘读取模板excel文件,然后读取第一个sheet
-        InputStream inp = util.ExcelUtilWithX.class.getResourceAsStream(templateFile);
+        InputStream inp = ExcelUtilWithX.class.getResourceAsStream(templateFile);
         XSSFWorkbook wb = new XSSFWorkbook(inp);
         XSSFSheet sheet = wb.getSheetAt(0);
 
@@ -224,7 +224,7 @@ public class ExcelUtilWithX {
             XSSFRow rowHeadError = sheetError.createRow(0);
             for (int i = 0; i < cellNum; i++) {
                 Cell cell = rowHeadError.createCell(i);
-                cell.setCellValue(util.ExcelUtilWithX.formatCell3(rowHead.getCell(i)));
+                cell.setCellValue(ExcelUtilWithX.formatCell3(rowHead.getCell(i)));
             }
             for (Integer key : errMap.keySet()) {
                 tmpC++;

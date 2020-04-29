@@ -139,4 +139,13 @@ public class ConstUtil {
 
     public static final String XMLHttpRequest = "XMLHttpRequest";
 
+    /**
+     * 0SS
+     */
+    public static final String oss_endpoint = conf.getString("oss.endpoint");
+    public static final String oss_access_key_id = conf.getString("oss.access.key.id");
+    public static final String oss_access_key_secret = conf.getString("oss.access.key.secret");
+    public static final String oss_bucket_name = conf.getString("oss.bucket.name");
+    public static final String oss_file_dir = conf.getString("oss.file.dir");
+    public static final String oss_thumbnail_dir = conf.getString("oss.thumbnail.dir");
 }

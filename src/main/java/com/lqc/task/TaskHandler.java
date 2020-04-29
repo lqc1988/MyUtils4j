@@ -24,7 +24,6 @@ public class TaskHandler {
         taskService.doTask1();
         taskService.doTask2();
         taskService.doTask3();
-        ;
         System.out.println(String.format("同步执行take time：%ss \r\n", (new Date().getTime() - start.getTime()) / 1000));
         System.out.println(CommonUtil.nowStr() + "---end task--syncHandler");
     }
