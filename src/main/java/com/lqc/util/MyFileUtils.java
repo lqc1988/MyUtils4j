@@ -1,4 +1,4 @@
-package com.lqc.utils;
+package com.lqc.util;
 
 import com.lqc.enums.ResultEnum;
 import com.lqc.exception.MyException;

@@ -1,4 +1,4 @@
-package com.lqc.utils;
+package com.lqc.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.lqc.enums.ResultEnum;

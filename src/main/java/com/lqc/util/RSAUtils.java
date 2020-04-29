@@ -1,4 +1,4 @@
-package com.lqc.utils;
+package com.lqc.util;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 

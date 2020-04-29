@@ -1,4 +1,4 @@
-import com.lqc.utils.CommonUtil;
+import com.lqc.util.CommonUtil;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;

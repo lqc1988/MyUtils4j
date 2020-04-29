@@ -1,8 +1,6 @@
 package com.lqc.task;
 
-import com.lqc.utils.CommonUtil;
-
-import java.util.Date;
+import com.lqc.util.CommonUtil;
 
 /**
  * @author: liqinchao

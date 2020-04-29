@@ -1,7 +1,5 @@
 package com.test;
 
-import com.lqc.utils.HttpUtils;
-import com.lqc.utils.ListSortUtil;
 import com.test.to.BillOrder;
 import com.test.to.OrderInfo;
 

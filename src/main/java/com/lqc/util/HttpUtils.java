@@ -1,4 +1,4 @@
-package com.lqc.utils;
+package com.lqc.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;

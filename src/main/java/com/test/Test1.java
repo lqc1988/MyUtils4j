@@ -1,7 +1,6 @@
 package com.test;
 
-import com.lqc.utils.CommonUtil;
-import com.lqc.utils.HttpUtils;
+import com.lqc.util.CommonUtil;
 
 import java.util.Calendar;
 import java.util.Date;

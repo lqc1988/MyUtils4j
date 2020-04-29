@@ -1,4 +1,4 @@
-package com.lqc.utils;
+package com.lqc.util;
 
 import java.math.BigDecimal;
 import java.util.ResourceBundle;

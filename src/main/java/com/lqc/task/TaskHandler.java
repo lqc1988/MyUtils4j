@@ -1,13 +1,12 @@
 package com.lqc.task;
 
-import com.lqc.utils.CommonUtil;
+import com.lqc.util.CommonUtil;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 /**

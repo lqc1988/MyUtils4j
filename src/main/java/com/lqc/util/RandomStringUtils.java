@@ -1,4 +1,4 @@
-package com.lqc.utils;
+package com.lqc.util;
 
 import org.apache.commons.text.RandomStringGenerator;
 
@@ -7,13 +7,7 @@ import java.util.Random;
 import static org.apache.commons.text.CharacterPredicates.DIGITS;
 import static org.apache.commons.text.CharacterPredicates.LETTERS;
 
-/**
- * ClassName : RandomUtils
- * Author : liqinchao
- * CreateTime : 2019/3/18 18:11
- * Description : 随机数工具类
- */
-public class RandomUtils {
+public class RandomStringUtils {
 
     /**
      * 生成随机整数

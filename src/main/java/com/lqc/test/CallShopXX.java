@@ -1,17 +1,15 @@
 package com.lqc.test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.lqc.utils.CommonUtil;
-import com.lqc.utils.HttpUtils;
-import com.lqc.utils.SecurityUtil;
-import org.apache.commons.lang3.StringUtils;
+import com.lqc.util.CommonUtil;
+import com.lqc.util.HttpUtils;
+import com.lqc.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.math.BigDecimal;
 import java.util.HashMap;
 
 /**
