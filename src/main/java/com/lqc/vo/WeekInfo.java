@@ -16,4 +16,12 @@ public class WeekInfo {
 	 * yyyy-MM-dd
 	 */
 	public String yearMonthDay;
+
+	@Override
+	public String toString() {
+		return "WeekInfo{" +
+				"dayOfWeek=" + dayOfWeek +
+				", yearMonthDay='" + yearMonthDay + '\'' +
+				'}';
+	}
 }

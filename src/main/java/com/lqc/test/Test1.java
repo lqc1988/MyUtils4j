@@ -1,5 +1,8 @@
 package com.lqc.test;
 
+import com.alibaba.fastjson.JSONObject;
+import com.lqc.vo.WeekInfo;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,7 +13,7 @@ import java.util.Date;
  * Description : 测试类
  */
 public class Test1 {
-    public static void main(String[] args){
+    public static void main(String[] args) {
 //        System.out.println(ConstUtil.SMS_SIGN);
 //        System.out.println(ConstUtil.APP_MOD);
         try {
@@ -24,28 +27,37 @@ public class Test1 {
 //            testStr();
 
             //System.out.print(CommonUtil.lastMonth());
-            Calendar c1=Calendar.getInstance();
-            c1.setTime(new Date());
-            Calendar c2=Calendar.getInstance();
-            c2.setTime(new Date());
-            //c2.add(Calendar.MONTH,1);
-            c2.add(Calendar.MONTH,2);
-            System.out.print(sameYearMonth(c1.getTime(),c2.getTime()));
-
-        }catch (Exception e){
+            //Calendar c1=Calendar.getInstance();
+            //c1.setTime(new Date());
+            //Calendar c2=Calendar.getInstance();
+            //c2.setTime(new Date());
+            ////c2.add(Calendar.MONTH,1);
+            //c2.add(Calendar.MONTH,2);
+            //System.out.println(sameYearMonth(c1.getTime(),c2.getTime()));
+            WeekInfo weekInfo = new WeekInfo();
+            weekInfo.dayOfWeek = 2;
+            weekInfo.yearMonthDay = "2020-03-12";
+            System.out.println(JSONObject.toJSON(weekInfo));
+            System.out.println(JSONObject.toJSONString(weekInfo));
+            String res = "{\"test\":233,\"dayOfWeek\":3,\"yearMonthDay\":\"2020-03-22\"}";
+            weekInfo = JSONObject.parseObject(res, WeekInfo.class);
+            System.out.println(weekInfo);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    static void testStr(){
+
+    static void testStr() {
         for (int i = 0; i < 65534; i++) {
             System.out.print("a");
         }
     }
+
     static boolean sameYearMonth(Date d1, Date d2) {
-        Calendar c1=Calendar.getInstance();
+        Calendar c1 = Calendar.getInstance();
         c1.setTime(d1);
-        Calendar c2=Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
         c2.setTime(d2);
-        return c1.get(Calendar.YEAR)==c2.get(Calendar.YEAR)&&c1.get(Calendar.MONTH)==c2.get(Calendar.MONTH);
+        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH);
     }
 }
