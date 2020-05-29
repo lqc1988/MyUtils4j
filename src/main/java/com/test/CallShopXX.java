@@ -1,4 +1,4 @@
-package com.lqc.test;
+package com.test;
 
 import com.alibaba.fastjson.JSONObject;
 import com.lqc.util.CommonUtil;

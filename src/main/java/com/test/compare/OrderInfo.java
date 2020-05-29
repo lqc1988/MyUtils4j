@@ -1,4 +1,4 @@
-package com.test.to;
+package com.test.compare;
 
 import java.util.Comparator;
 
