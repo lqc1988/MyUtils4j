@@ -33,6 +33,9 @@
             // logo;
             logo: '',
 
+            // 二维码宽度;
+            width:200 ,
+
             error: function (msg) {
                 alert(msg);
             }
@@ -89,6 +92,8 @@
                 if (config.render === 'table') {
                     el = qrdom.clone();
                 } else {
+                    let width= !config.width?200:config.width;
+                    let height=width;
                     el = qrdom.cloneNode(true);
                     context = el.getContext("2d");
                     context.drawImage(qrdom, 0, 0);

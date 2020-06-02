@@ -10,7 +10,7 @@
         var i = cfg.margin;
         var j = cfg.margin;
 
-        var dpx  = cfg.retina ? 2 : 1;
+        var dpx = cfg.retina ? 2 : 1;
 
         var mSize = cfg.moduleSize * dpx;
         var size = self.pixArr.length;
@@ -47,9 +47,11 @@
             var size = cfg.margin * 2 + self.pixArr.length;
             canvas.width = size * mSize;
             canvas.height = size * mSize;
+            let calcSize=size * cfg.moduleSize;
+            let cfgSize=cfg.width;
             $(canvas).css({
-                width: size * cfg.moduleSize,
-                height: size * cfg.moduleSize
+                width: !cfgSize ? calcSize : cfgSize,
+                height:!cfgSize ? calcSize : cfgSize,
             });
 
             ctx.fillStyle = getRGB(cfg.bgColor);
