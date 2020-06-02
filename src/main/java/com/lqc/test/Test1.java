@@ -1,9 +1,12 @@
 package com.lqc.test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.lqc.util.CommonUtil;
+import com.lqc.util.qrcode.QRCodeUtils;
 import com.lqc.vo.WeekInfo;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,16 +27,29 @@ public class Test1 {
             //testCal();
             //testJson();
             //testV();
-            testCompareNull();
+            //testCompareNull();
+            qrCode();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void qrCode() {
+        File qrFile = new File("/data/genFile/" + System.currentTimeMillis() + ".png");
+        File logoFile = new File(ClassLoader.getSystemResource("images/logo_hxdf.jpg").getPath());
+        File codeFile = QRCodeUtils.createQRCode("https://api-park-test.hejiahuan.cn", logoFile);
+        try {
+            FileUtils.copyFile(codeFile, qrFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     static void testCompareNull() {
-        Integer a=null;
-        System.out.print((null!=a&&1==a));
+        Integer a = null;
+        System.out.print((null != a && 1 == a));
     }
+
     static void testIP() throws Exception {
         String localIP = InetAddress.getLocalHost().getHostAddress();
         System.out.println("localIP=" + localIP);
@@ -76,6 +92,7 @@ public class Test1 {
             System.out.print("a");
         }
     }
+
     /**
      * 输出一个int的二进制数
      *
