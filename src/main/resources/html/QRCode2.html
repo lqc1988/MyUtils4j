@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QRCode2</title>
+    <script type="text/javascript" src="../javascript/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="../javascript/jquery.qrcode.min.js"></script>
+</head>
+<body>
+<div id="output"></div>
+<script>
+    jQuery(function() {
+        //计算宽，高，中心坐标，logo大小
+        let options = {
+            render: 'canvas',
+            ecLevel: 'H',
+            minVersion: 6,
+            fill: '#333333',
+            // fill: jq('#img-buffer')[0],
+            background: '#ffffff',
+            text: 'AAAACCCSS',
+            size: 256,
+            radius: 0.5,
+            quiet: 1,
+            mode: 4,
+            mSize: 11 * 0.01,
+            mPosX: 50 * 0.01,
+            mPosY: 50 * 0.01,
+            label: 'test',
+            fontname: 'Ubuntu',
+            fontcolor: '#ff9818',
+            image: $("#logo")[0]
+        };
+        $('#output').empty().qrcode(options);
+    })
+</script>
+
+<img id="logo" src="../images/logo_store.png" style="display: none;" />
+</body>
+</html>

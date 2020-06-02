@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QRCode1</title>
+    <script type="text/javascript" src="../javascript/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="../javascript/jquery.qrcode.min.js"></script>
+    <script>
+        function genQRCode() {
+            $("#output").empty();
+            let left = 10;
+            let right = 10;
+            //计算宽，高，中心坐标，logo大小
+            let width = 256;
+            let height = 256;
+            let content = $("#content").val();
+            let codeSize = $("#codeSize").val();
+            width = (!codeSize) ? 256 : codeSize;
+            height=width;
+            if ($.trim(content).length == 0) {
+                alert("请输入二维码内容");
+                return;
+            }
+            //生成二维码
+            $("#output").qrcode({
+                left: left,
+                right: right,
+                width: width,
+                height: height,
+                text: content
+            });
+        }
+    </script>
+</head>
+<body style="text-align: center;">
+<div style="padding: 100px">
+    <div id="output"></div>
+    <p></p>
+    <p></p>
+    <input type="text" name="content" id="content" placeholder="请输入二维码内容"><br><br>
+    <input type="text" name="codeSize" id="codeSize" placeholder="请输入二维码宽度"><br><br>
+    <input type="button" onclick="genQRCode()" value="生成二维码">
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QRCode1</title>
+    <script type="text/javascript" src="../javascript/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="../javascript/jquery.qrcode.min.js"></script>
+</head>
+<body>
+<div id="output"></div>
+<script>
+    jQuery(function() {
+        let left=10;
+        let right=10;
+        //计算宽，高，中心坐标，logo大小
+        let width = 256;
+        let height = 256;
+        let x = width * 0.35;
+        let y = height * 0.35;
+        let lw = width * 0.3;
+        let lh = height * 0.3;
+        //生成二维码
+        $("#output").qrcode({
+            left:left,
+            right:right,
+            width: width,
+            height: height,
+            text: "CSSJ01BJ60960"
+        });
+        //画logo
+        $("#output canvas")[0].getContext('2d').drawImage($("#logo")[0], x, y, lw, lh);
+    })
+</script>
+<img id="logo" src="../images/logo180.png" style="display: none;" />
+</body>
+</html>

@@ -35,9 +35,11 @@ public class Test1 {
     }
 
     static void qrCode() {
-        File qrFile = new File("/data/genFile/" + System.currentTimeMillis() + ".png");
-        File logoFile = new File(ClassLoader.getSystemResource("images/logo_hxdf.jpg").getPath());
-        File codeFile = QRCodeUtils.createQRCode("https://api-park-test.hejiahuan.cn", logoFile);
+        //String content = "https://downloadpkg.app3c.cn/app/download?path=http://A6982009354795.qiniucdn.apicloud-system.com/6a1b49678efc7ce7f800e79dd74b1aa0_d&ver=0.1.12&size=4.78M";
+        String content = "http://suo.im/6nBrmg";
+        File qrFile = new File("/data/genFile/" + System.currentTimeMillis() + ".jpg");
+        //File logoFile = new File(ClassLoader.getSystemResource("images/logo_hxdf.jpg").getPath());
+        File codeFile = QRCodeUtils.createQRCode(content, 80,null);
         try {
             FileUtils.copyFile(codeFile, qrFile);
         } catch (Exception e) {
