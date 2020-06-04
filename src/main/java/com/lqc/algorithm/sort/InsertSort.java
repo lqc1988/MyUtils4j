@@ -3,11 +3,10 @@ package com.lqc.algorithm.sort;
 import com.lqc.util.PrintUtils;
 
 /**
- * author: lqc
- * Date: 2020/5/29 13:54
- * Description: 插入排序
+ * @Author: lqc
+ * @Date: 2020/5/29 13:54
+ * @Description: 插入排序
  */
-
 
 public class InsertSort {
     public static void main(String[] args) {
@@ -15,7 +14,10 @@ public class InsertSort {
         insertionSort(input);
     }
 
-
+    /**
+     * @param input
+     * @return
+     */
     public static void insertionSort(int[] input) {
         if (input == null || input.length <= 1) {
             return;
