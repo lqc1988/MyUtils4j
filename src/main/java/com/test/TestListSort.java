@@ -1,7 +1,7 @@
 package com.test;
 
-import com.test.to.BillOrder;
-import com.test.to.OrderInfo;
+import com.test.compare.BillOrder;
+import com.test.compare.OrderInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;

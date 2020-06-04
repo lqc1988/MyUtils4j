@@ -153,32 +153,7 @@ public class SecurityUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        testSet();
-    }
-    static void testSet(){
-        Set<Integer> aa=new HashSet<>();
-        aa.add(33);
-        int cc=0;
-        for (;;) {
-            cc++;
-            Integer bb=aa.iterator().next();
-            if (null==bb){
-                System.out.println(cc+"次结果为null");
-                break;
-            }
-        }
-    }
-    static void testSub(){
-        Integer a=201905;
-        String b=a.toString();
-        System.out.println(b);
-        System.out.println(b.length());
-        System.out.println(b.substring(0,4)+"-"+b.substring(4,6));
-
-        String c=(--a).toString();
-        System.out.println(c);
-        String d=c.substring(0,4)+"-"+c.substring(4,6);
-        System.out.println(d);
+        testSign();
     }
     static void testSign() throws Exception{
         String appSecret = "bfa1ba4a3dac4f18adec949ac00a44d2";
