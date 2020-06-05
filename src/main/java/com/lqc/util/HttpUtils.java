@@ -30,7 +30,6 @@ import java.util.Map;
  * Description : Http Client工具类
  */
 public class HttpUtils {
-    //    private static Logger logger = LogManager.getLogger("utils.HttpUtils");
     private static Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 
     private static HttpPost assembleHttpPost(String url, Map<String, String> headMap, Map<String, Object> paramMap,
@@ -41,7 +40,7 @@ public class HttpUtils {
         if (null != paramMap) {
             for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
                 paraList.add(new BasicNameValuePair(entry.getKey(), entry.getValue()+""));
-                //logger.debug(opt + ",入参==>" + entry.getKey() + ":" + entry.getValue());
+                logger.debug(opt + ",入参==>" + entry.getKey() + ":" + entry.getValue());
             }
         }
         httpPost.setEntity(new UrlEncodedFormEntity(paraList, "UTF-8"));

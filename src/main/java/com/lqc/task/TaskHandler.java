@@ -24,7 +24,7 @@ public class TaskHandler {
         taskService.doTask1();
         taskService.doTask2();
         taskService.doTask3();
-        System.out.println(String.format("同步执行take time：%ss \r\n", (new Date().getTime() - start.getTime()) / 1000));
+        System.out.println(String.format("同步执行take time：%ss \r\n", (System.currentTimeMillis() - start.getTime()) / 1000));
         System.out.println(CommonUtil.nowStr() + "---end task--syncHandler");
     }
 
@@ -48,7 +48,7 @@ public class TaskHandler {
                 return "";
             }).collect(Collectors.toList());
             System.out.println("results :" + results);
-            System.out.println(String.format("异步多线程take time: %ss \r\n", (new Date().getTime() - start.getTime()) / 1000));
+            System.out.println(String.format("异步多线程take time: %ss \r\n", (System.currentTimeMillis() - start.getTime()) / 1000));
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -74,7 +74,7 @@ public class TaskHandler {
                 List results = futureList.stream().map(CompletableFuture::join).collect(Collectors.toList());
                 System.out.println(CommonUtil.nowStr() + "---results :" + results);
             });
-            System.out.println(String.format("异步编排take time: %ss ", (new Date().getTime() - start.getTime()) / 1000));
+            System.out.println(String.format("异步编排take time: %ss ", (System.currentTimeMillis() - start.getTime()) / 1000));
             Thread.sleep(4000L);
         } catch (Exception e) {
             e.printStackTrace();

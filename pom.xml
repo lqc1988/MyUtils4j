@@ -29,30 +29,12 @@
             <version>1.6</version>
         </dependency>
         <!-- log start -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>compile</scope>
-        </dependency>
 
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.logback-extensions</groupId>
-            <artifactId>logback-ext-spring</artifactId>
-            <version>0.1.2</version>
-            <scope>compile</scope>
         </dependency>
 
         <!--<dependency>
