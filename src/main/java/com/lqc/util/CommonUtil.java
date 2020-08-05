@@ -160,12 +160,28 @@ public class CommonUtil {
         return (int) ((bigTime.getTime() - smallTime.getTime()) / (1000 * 60));
     }
 
-
     /**
-     * 比较两个时间的天数差
+     * 计算两个日期之间相隔天数
      *
-     * @param bigTime   大时间
-     * @param smallTime 小时间
+     * @param bigDate   大日期
+     * @param smallDate 小日期
+     * @return
+     */
+    public static long calcDay(Date bigDate, Date smallDate) {
+        try {
+            bigDate = formatDate(bigDate, "yyyyMMdd");
+            smallDate = formatDate(smallDate, "yyyyMMdd");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (bigDate.getTime() - smallDate.getTime()) / (1000 * 60 * 60 * 24);
+    }
+    /**
+     * 计算两个日期之间相隔天数
+     *
+     * @param bigDate   大时间
+     * @param smallDate 小时间
      * @return
      */
     public static long compareDay(Date bigTime, Date smallTime) {

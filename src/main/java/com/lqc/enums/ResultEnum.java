@@ -7,6 +7,9 @@ package com.lqc.enums;
  * Description : 通用响应结果枚举
  */
 public enum ResultEnum {
+	/**
+	 *
+	 */
 	ERR(100, "操作失败，请联系客服"),
 	ERR_PARAM(101, "参数错误"),
 	EXIST(102, "数据已存在"),

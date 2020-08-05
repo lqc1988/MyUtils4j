@@ -1,14 +1,17 @@
 package com.test;
 
 import com.alibaba.fastjson.JSONObject;
+import com.lqc.enums.InvoiceTypeEnum;
 import com.lqc.util.CommonUtil;
+import com.lqc.util.qrcode.QRCodeUtils;
 import com.lqc.vo.WeekInfo;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.net.InetAddress;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Test1 {
     public static void main(String[] args) throws Exception {
@@ -18,22 +21,84 @@ public class Test1 {
         //System.out.println("Response String to byte[]="+res_str.getBytes());
         //byte[] res_byte=HttpUtils.getByte(url,null,null);
         //System.out.println("Response byte[]="+res_byte);
-        Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(new Date());
-        cal1.add(Calendar.DATE, 1);
-        System.out.println("cal1=" + cal1.getTime());
-        System.out.println(CommonUtil.compareDay(cal1.getTime(), new Date()));
-        System.out.println(CommonUtil.compareDay(new Date(), new Date()));
         try {
             //testStr();
             //System.out.print(CommonUtil.lastMonth());
             //testIP();
             //testDivide();
-            //testCal();
+//            testCal();
             //testJson();
             //testV();
             //testCompareNull();
-            testSet();
+//            testSet();
+//            testWhile();
+//            array();
+//            testListSteam();
+//            testSplit();
+//            testMo();
+//            Date now = new Date();
+//            Date d=CommonUtil.addDay(now,-21);
+//            d = now;
+//            System.out.print(now.compareTo(d));
+            System.out.println(InvoiceTypeEnum.displayOf("专票"));
+            System.out.println(InvoiceTypeEnum.displayOf("233"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void testMo() {
+        System.out.println(0 % 5);
+        System.out.println(3 % 5);
+        System.out.println(5 % 5);
+        System.out.println(6 % 5);
+
+    }
+
+    static void testSplit() {
+//        String ids="23,21,3,8";
+        String ids = "233";
+        List<String> appIdList = null;
+        if (StringUtils.isNotBlank(ids)) {
+            appIdList = Arrays.asList(ids.split(","));
+        }
+        appIdList.forEach(System.out::println);
+    }
+
+    static void testListSteam() {
+        List<String> list = new ArrayList<>();
+        list.add("e12rqe");
+        list.add("rqwqs1r");
+        list.add("fggee1");
+        System.out.println(list.stream().collect(Collectors.joining("','")));
+    }
+
+    static void array() {
+        String a = "123";
+        List<String> aList = Arrays.asList(a);
+        List<String> bList = new ArrayList<>();
+        bList.add(a);
+        aList.forEach(s -> System.out.println(s));
+        bList.forEach(s -> System.out.println(s));
+    }
+
+    static void testWhile() {
+        int a = 0;
+        do {
+            System.out.println(a);
+            a++;
+        } while (a < 3);
+    }
+
+    static void qrCode() {
+        //String content = "https://downloadpkg.app3c.cn/app/download?path=http://A6982009354795.qiniucdn.apicloud-system.com/6a1b49678efc7ce7f800e79dd74b1aa0_d&ver=0.1.12&size=4.78M";
+        String content = "http://suo.im/6nBrmg";
+        File qrFile = new File("/data/genFile/" + System.currentTimeMillis() + ".jpg");
+        //File logoFile = new File(ClassLoader.getSystemResource("images/logo_hxdf.jpg").getPath());
+        File codeFile = QRCodeUtils.createQRCode(content, 80, null);
+        try {
+            FileUtils.copyFile(codeFile, qrFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,6 +153,15 @@ public class Test1 {
      * 测试日期
      */
     static void testCal() {
+
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(new Date());
+        cal1.add(Calendar.DATE, 2);
+        System.out.println("cal1=" + cal1.getTime());
+        System.out.println(CommonUtil.compareDay(cal1.getTime(), new Date()));
+        System.out.println(CommonUtil.compareDay(new Date(), cal1.getTime()));
+        System.out.println(CommonUtil.compareDay(new Date(), new Date()));
+
         Calendar c1 = Calendar.getInstance();
         c1.setTime(new Date());
         Calendar c2 = Calendar.getInstance();

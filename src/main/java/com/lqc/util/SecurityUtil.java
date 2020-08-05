@@ -156,10 +156,10 @@ public class SecurityUtil {
         testSign();
     }
     static void testSign() throws Exception{
-        String appSecret = "bfa1ba4a3dac4f18adec949ac00a44d2";
+        String appSecret = "1eca117904ff11ea8999525400468c9f";
         HashMap<String, String> paramMap = new HashMap<>();
         //接口公共参数
-        paramMap.put("appKey", "ba5e4aa800904377a60c4175030fc6c2");
+        paramMap.put("appKey", "180dda7604ff11ea8999525400468c9f");
         String timestamp = System.currentTimeMillis()+"";
         System.out.println("timestamp:"+timestamp);
         paramMap.put("timestamp", timestamp);
@@ -169,7 +169,10 @@ public class SecurityUtil {
 //        paramMap.put("price", new BigDecimal("0.00").toString());
 //        paramMap.put("categoryId", "351");
 //        paramMap.put("grantAppKey", "c1dfc45857954622865d6a5d112fc65f");
-        paramMap.put("access_token", "82109d8dca6b4922885ed507e36d11ab");
+        paramMap.put("access_token", "0fee93c444dd484296be8ee6e346d311");
+        paramMap.put("billMonth", "202005");
+        paramMap.put("appId", "e9bb0d6a121e4b8b94a968e51b189930");
+        paramMap.put("businessId", "6e1ef6baa5094735bab2ebf986f8c177");
 //        paramMap.put("serviceId", "fa8c269a8cab434dbca51b97c0bc19e1");
 //        paramMap.put("serialNo", "PB00001000130699");
 //        paramMap.put("serviceType", "0");
