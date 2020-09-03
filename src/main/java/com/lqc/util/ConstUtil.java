@@ -148,4 +148,26 @@ public class ConstUtil {
     public static final String oss_bucket_name = conf.getString("oss.bucket.name");
     public static final String oss_file_dir = conf.getString("oss.file.dir");
     public static final String oss_thumbnail_dir = conf.getString("oss.thumbnail.dir");
+
+
+    /**
+     * 消息队列名称：队列1
+     */
+    public final static String MQ_QUEUE_NAME_1 = "my_queue1";
+    /**
+     * 消息topic名称：topic1
+     */
+    public final static String MQ_TOPIC_NAME_1 = "my_topic1";
+    /**
+     * 消息队列服务url
+     */
+    public final static String MQ_URL = conf.getString("mq.url");
+    /**
+     * 消息队列用户名
+     */
+    public final static String MQ_USER_NAME = conf.getString("mq.username");
+    /**
+     * 消息队列密码
+     */
+    public final static String MQ_PASSWORD = conf.getString("mq.password");
 }
