@@ -180,8 +180,8 @@ public class CommonUtil {
     /**
      * 计算两个日期之间相隔天数
      *
-     * @param bigDate   大时间
-     * @param smallDate 小时间
+     * @param bigTime   大时间
+     * @param smallTime 小时间
      * @return
      */
     public static long compareDay(Date bigTime, Date smallTime) {
@@ -579,7 +579,7 @@ public class CommonUtil {
         }
         if (null == today) {
             // 取本周第一天
-            weekList = new ArrayList<>();
+            weekList = new ArrayList<WeekInfo>();
             today = getCurrentMonday(); // 本周星期一的Calendar
             if (next) {
                 // 加7天
@@ -676,7 +676,7 @@ public class CommonUtil {
      * @return
      */
     public static Set<String> getNullPropertySet(Object bean) {
-        Set<String> emptyNames = new HashSet<>();
+        Set<String> emptyNames = new HashSet<String>();
         final BeanWrapper src = new BeanWrapperImpl(bean);
         PropertyDescriptor[] pds = src.getPropertyDescriptors();
         for (PropertyDescriptor pd : pds) {
