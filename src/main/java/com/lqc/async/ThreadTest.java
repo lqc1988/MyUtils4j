@@ -15,13 +15,13 @@ public class ThreadTest {
     private static Logger logger = LoggerFactory.getLogger(ThreadTest.class);
 
     public static void main(String[] args) {
-        System.out.println("--------------------------------1");
-//        completeExe();
+        logger.info("开始测试-------------------------1");
+        completeExe();
 ////        System.out.println("--------------------------------2");
 //        threadExe();
 //        System.out.println("--------------------------------3");
-        queueExe();
-        System.out.println("--------------------------------3");
+//        queueExe();
+        logger.info("结束测试-------------------------3");
     }
 
     static void threadExe() {
@@ -43,12 +43,12 @@ public class ThreadTest {
             for (int i = 0; i < 10; i++) {
                 DoThing doThing = new DoThing();
                 final String threadName = "CompletableFuture-->>" + i;
-//                CompletableFuture.runAsync(() -> doThing.doSomeThing0(threadName));
+                CompletableFuture.runAsync(() -> doThing.doSomeThing0(threadName));
 //                CompletableFuture.runAsync(() -> DoThing.doSomeThing1(threadName));
 //                CompletableFuture.runAsync(() -> doThing.doSomeThing2(threadName));
-                CompletableFuture.runAsync(() -> doThing.doSomeThing3(threadName));
+//                CompletableFuture.runAsync(() -> doThing.doSomeThing3(threadName));
             }
-            Thread.sleep(12000L);
+            Thread.sleep(120000L);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,7 +69,7 @@ public class ThreadTest {
                 final String threadName = "queueExe-->>" + i;
                 executorService.execute(() -> doThing.doSomeThing3(threadName));
             }
-            Thread.sleep(12000L);
+            Thread.sleep(120000L);
         } catch (Exception e) {
             e.printStackTrace();
         }

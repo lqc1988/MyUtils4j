@@ -19,10 +19,12 @@ public class ImageGeneratorFZ {
 
 	private static Color getRandColor(int fc, int bc) {
 		Random random = new Random();
-		if (fc > 255)
+		if (fc > 255) {
 			fc = 255;
-		if (bc > 255)
+		}
+		if (bc > 255) {
 			bc = 255;
+		}
 		int r = fc + random.nextInt(bc - fc);
 		int g = fc + random.nextInt(bc - fc);
 		int b = fc + random.nextInt(bc - fc);
@@ -47,13 +49,9 @@ public class ImageGeneratorFZ {
 		int aa=random.nextInt(20);
 		int bb=random.nextInt(20);
 		int cc=random.nextInt(3);
-		String code="";
-		int dd=0;
+		String code;
+		int dd;
 		switch (cc) {
-			case 0:
-				dd=aa+bb;
-				code=aa+"加"+bb;
-				break;
 			case 1:
 				if (aa<bb) {
 					bb=random.nextInt(aa);
@@ -72,28 +70,24 @@ public class ImageGeneratorFZ {
 				code=aa+"加"+bb;
 				break;
 		}
-//		System.out.println("code==="+code);
 		int si=random.nextInt(4);
-		int fsize=random.nextInt(15)+30;
+		int size=random.nextInt(15)+30;
 		switch (si) {
-			case 0:
-		        g.setFont(new Font("黑体", Font.BOLD, fsize));
-				break;
 			case 1:
-		        g.setFont(new Font("宋体", Font.BOLD, fsize));
+		        g.setFont(new Font("宋体", Font.BOLD, size));
 				break;
 			case 2:
-		        g.setFont(new Font("楷体", Font.BOLD, fsize));
+		        g.setFont(new Font("楷体", Font.BOLD, size));
 				break;
 			case 3:
-		        g.setFont(new Font("微软雅黑", Font.BOLD, fsize));
+		        g.setFont(new Font("微软雅黑", Font.BOLD, size));
 				break;
 			case 4:
-		        g.setFont(new Font("仿宋", Font.BOLD, fsize));
+		        g.setFont(new Font("仿宋", Font.BOLD, size));
 				break;
 	
 			default:
-		        g.setFont(new Font("黑体", Font.BOLD, fsize));
+		        g.setFont(new Font("黑体", Font.BOLD, size));
 				break;
 		}
 		for (int i = 0; i < code.length(); i++) {

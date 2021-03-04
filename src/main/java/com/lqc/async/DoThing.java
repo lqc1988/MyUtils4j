@@ -50,7 +50,7 @@ public class DoThing {
         synchronized (this.getClass().getName()) {
             try {
                 logger.info("{} start ...", threadName);
-                Thread.sleep(1000L);
+                Thread.sleep(2000L);
             } catch (Exception e) {
                 e.printStackTrace();
             }
