@@ -1,5 +1,8 @@
 package com.lqc.util;
 
+/**
+ * @author lqc
+ */
 public class PrintUtils {
 
     public static void prtArray4Int(int[] arr) {
