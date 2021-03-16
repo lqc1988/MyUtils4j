@@ -1,5 +1,7 @@
 package com.test.compare;
 
+import lombok.Data;
+
 import java.util.Comparator;
 
 /**
@@ -7,9 +9,18 @@ import java.util.Comparator;
  * @Date: 2020/1/20 14:47
  * @Description:
  */
-public class OrderInfo implements Comparator<OrderInfo>{
-        public String id;
-    public String title;
+@Data
+public class OrderInfo implements Comparator<OrderInfo> {
+    private String id;
+    private String title;
+
+    public OrderInfo() {
+    }
+
+    public OrderInfo(String id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 
     @Override
     public int compare(OrderInfo o1, OrderInfo o2) {

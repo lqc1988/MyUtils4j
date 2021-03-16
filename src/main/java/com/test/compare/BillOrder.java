@@ -13,6 +13,6 @@ public class BillOrder implements Comparator<BillOrder> {
 
     @Override
     public int compare(BillOrder o1, BillOrder o2) {
-        return o1.orderInfo.id.compareTo(o2.orderInfo.id);
+        return o1.orderInfo.getId().compareTo(o2.orderInfo.getId());
     }
 }
