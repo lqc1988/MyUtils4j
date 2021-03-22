@@ -32,9 +32,11 @@ public class TestListRepeat {
         list.add(o4);
         int size = list.size();
         int count1 = list.stream().map(OrderInfo::getId).distinct().collect(Collectors.toList()).size();
-        System.out.println("list.size=" + size + "  count=" + count1);
+        System.out.println("list.size=" + list.size() + "  count1=" + count1);
         int count2 = list.stream().distinct().collect(Collectors.toList()).size();
-        System.out.println("list.size=" + size + "  count=" + count2);
+        System.out.println("list.size=" + size + "  count2=" + count2);
+        int countaa = list.stream().collect(Collectors.groupingBy(a -> a.getId(), Collectors.counting())).size();;
+        System.out.println("list.size=" + size + "  countaa=" + countaa);
 
 
         List<UserInfo> list2 = new ArrayList<>();
@@ -48,6 +50,6 @@ public class TestListRepeat {
         list2.add(u4);
         int size2 = list2.size();
         int count4 = list2.stream().distinct().collect(Collectors.toList()).size();
-        System.out.println("list2.size=" + size2 + "  count=" + count4);
+        System.out.println("list2.size=" + size2 + "  count4=" + count4);
     }
 }
