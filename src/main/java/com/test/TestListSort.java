@@ -9,6 +9,11 @@ import java.util.List;
 
 public class TestListSort {
     public static void main(String[] args) throws Exception {
+        System.out.println(System.currentTimeMillis());
+//        sort();
+    }
+
+    static void sort() {
         List<BillOrder> billOrderList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             OrderInfo orderInfo = new OrderInfo();
@@ -42,6 +47,4 @@ public class TestListSort {
                     " ，orderInfo.title：" + billOrder.orderInfo.getTitle());
         }
     }
-
-
 }
