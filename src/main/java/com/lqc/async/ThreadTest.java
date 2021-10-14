@@ -16,11 +16,12 @@ public class ThreadTest {
 
     public static void main(String[] args) {
         logger.info("开始测试-------------------------1");
-        completeExe();
-////        System.out.println("--------------------------------2");
+//        completeExe();
+////        logger.info("--------------------------------2");
 //        threadExe();
-//        System.out.println("--------------------------------3");
+//        logger.info("--------------------------------3");
 //        queueExe();
+        threadSubmit();
         logger.info("结束测试-------------------------3");
     }
 
@@ -36,6 +37,33 @@ public class ThreadTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    static void threadSubmit() {
+        logger.info("start...");
+        ExecutorService executorService = init();
+        Future<?> submit = executorService.submit(() -> {
+            logger.info("ing...");
+            try {
+                Thread.sleep(3000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        logger.info("continue...");
+//        try {
+//            submit.get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+        logger.info("end...");
+    }
+
+    static ExecutorService init() {
+        return new ThreadPoolExecutor(2, 10,
+                60L, TimeUnit.SECONDS, new LinkedBlockingDeque<>(),
+                Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
     }
 
     static void completeExe() {
