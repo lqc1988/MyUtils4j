@@ -5,10 +5,8 @@ import com.alibaba.fastjson.JSON;
 import com.lqc.util.TimeUtils;
 import com.lqc.vo.WeekInfo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @ClassName Demo1
@@ -19,8 +17,18 @@ import java.util.List;
  **/
 public class Demo1 {
 	public static void main(String[] args) {
+//		System.out.println(BigDecimal.valueOf(0.00D));
+//		System.out.println(BigDecimal.valueOf(0.00D).intValue()==0);
+//		compareStr("20", "20");
+//		compareStr("20", "21");
+//		compareStr("20", "30");
+//		compareStr("30", "20");
+		System.out.println("SELECT * FROM order_shipment WHERE  order_shipment.carrier_code = 'debangwuliu'".replaceAll("\\*","order_no"));
 	}
 
+	static void compareStr(String a, String b) {
+		System.out.println("a:"+a+"，b:"+b+"，compare: a>b="+a.compareTo(b));
+	}
 	static int compareVersion(String version1, String version2) {
 		String arr1[] = version1.split(".");
 		String arr2[] = version2.split(".");

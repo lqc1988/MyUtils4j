@@ -53,7 +53,7 @@ public class AESUtil {
         byte[] key = "4b93dc38a9bdca37ce4bb8aa03b69efe".getBytes();
         String mode = "ECB";
         String padding = "PKCS7Padding";
-        String content = "Zhang123456";
+        String content = "Qc123456";
         String encryptStr = encrypt(mode, padding, key, content);
         decrypt(mode, padding, key, encryptStr);
     }

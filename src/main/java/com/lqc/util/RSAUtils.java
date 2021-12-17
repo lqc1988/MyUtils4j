@@ -34,9 +34,9 @@ public class RSAUtils {
         keyPairGen.initialize(2048, secureRandom);
         KeyPair keyPair = keyPairGen.generateKeyPair();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        String pub = new String(Base64.encode(publicKey.getEncoded()));
+        String pub = Base64.encode(publicKey.getEncoded());
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        String prv = new String(Base64.encode(privateKey.getEncoded()));
+        String prv = Base64.encode(privateKey.getEncoded());
         map.put("public", pub);
         map.put("private", prv);
         return map;
