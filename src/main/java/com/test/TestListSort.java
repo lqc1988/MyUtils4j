@@ -9,8 +9,8 @@ import java.util.List;
 
 public class TestListSort {
     public static void main(String[] args) throws Exception {
-        System.out.println(System.currentTimeMillis());
-//        sort();
+//        System.out.println(System.currentTimeMillis());
+        sort();
     }
 
     static void sort() {
@@ -27,24 +27,27 @@ public class TestListSort {
         for (int i = 0; i < 3; i++) {
             OrderInfo orderInfo = new OrderInfo();
             orderInfo.setId("2");
-            orderInfo.setTitle(i + "eee");
+            orderInfo.setTitle(i + "ccc");
             BillOrder billOrder = new BillOrder();
             billOrder.orderInfo = orderInfo;
-            billOrder.goods = i + "fff";
+            billOrder.goods = i + "ddd";
             billOrderList.add(billOrder);
         }
         System.out.println("排序前:=====");
         for (BillOrder billOrder : billOrderList) {
-            System.out.println("billOrder.goods：" + billOrder.goods + "，orderInfo.id：" + billOrder.orderInfo.getId() +
-                    " ，orderInfo.title：" + billOrder.orderInfo.getTitle());
+            System.out.println(billOrder);
         }
-
+        billOrderList.sort(billOrderList.get(0));
         //ListSortUtil.sort(billOrderList,"orderInfo",null);
-        Collections.sort(billOrderList, billOrderList.get(0));
+//        Collections.sort(billOrderList, billOrderList.get(0));
         System.out.println("排序后:=====");
         for (BillOrder billOrder : billOrderList) {
-            System.out.println("billOrder.goods：" + billOrder.goods + "，orderInfo.id：" + billOrder.orderInfo.getId() +
-                    " ，orderInfo.title：" + billOrder.orderInfo.getTitle());
+            System.out.println(billOrder);
+        }
+        Collections.reverse(billOrderList);
+        System.out.println("反转后:=====");
+        for (BillOrder billOrder : billOrderList) {
+            System.out.println(billOrder);
         }
     }
 }

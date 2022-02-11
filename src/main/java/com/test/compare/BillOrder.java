@@ -1,5 +1,7 @@
 package com.test.compare;
 
+import lombok.Data;
+
 import java.util.Comparator;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Comparator;
  * @Date: 2020/1/20 14:47
  * @Description:
  */
+@Data
 public class BillOrder implements Comparator<BillOrder> {
     public OrderInfo orderInfo;
     public String goods;
