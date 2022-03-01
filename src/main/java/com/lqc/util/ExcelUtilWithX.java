@@ -104,9 +104,9 @@ public class ExcelUtilWithX {
         if (cell == null) {
             return "";
         } else {
-            if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
+            if (cell.getCellType() == CellType.BOOLEAN) {
                 return String.valueOf(cell.getBooleanCellValue());
-            } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+            } else if (cell.getCellType() == CellType.NUMERIC) {
                 return String.valueOf(df.format(cell.getNumericCellValue()));
             } else {
                 return String.valueOf(cell.getStringCellValue());
@@ -121,9 +121,9 @@ public class ExcelUtilWithX {
      * @return
      */
     public static String formatCell2(XSSFCell cell) {
-        if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
+        if (cell.getCellType() == CellType.BOOLEAN) {
             return String.valueOf(cell.getBooleanCellValue());
-        } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+        } else if (cell.getCellType() == CellType.NUMERIC) {
             //针对单元格式为日期格式
             if (DateUtil.isCellDateFormatted(cell)) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -146,7 +146,7 @@ public class ExcelUtilWithX {
         if (cell == null) {
             return "";
         }
-        if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+        if (cell.getCellType() == CellType.NUMERIC) {
             String numStr="0";
             double num = cell.getNumericCellValue();
             //日期格式的处理
@@ -167,27 +167,27 @@ public class ExcelUtilWithX {
             return numStr;
         }
 
-        if (cell.getCellTypeEnum() == CellType.STRING) {
+        if (cell.getCellType() == CellType.STRING) {
             //字符串
             return cell.getStringCellValue();
         }
 
-        if (cell.getCellTypeEnum() == CellType.FORMULA) {
+        if (cell.getCellType() == CellType.FORMULA) {
             // 公式
             return cell.getCellFormula();
         }
 
-        if (cell.getCellTypeEnum() == CellType.BLANK) {
+        if (cell.getCellType() == CellType.BLANK) {
             // 空白
             return "";
         }
 
-        if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
+        if (cell.getCellType() == CellType.BOOLEAN) {
             // 布尔取值
             return cell.getBooleanCellValue() + "";
         }
 
-        if (cell.getCellTypeEnum() == CellType.ERROR) {
+        if (cell.getCellType() == CellType.ERROR) {
             //错误类型
             return cell.getErrorCellValue() + "";
         }

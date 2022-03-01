@@ -97,9 +97,9 @@ public class ExcelUtil {
         if (hssfCell == null) {
             return "";
         } else {
-            if (hssfCell.getCellTypeEnum() == CellType.BOOLEAN) {
+            if (hssfCell.getCellType() == CellType.BOOLEAN) {
                 return String.valueOf(hssfCell.getBooleanCellValue());
-            } else if (hssfCell.getCellTypeEnum() == CellType.NUMERIC) {
+            } else if (hssfCell.getCellType() == CellType.NUMERIC) {
                 return String.valueOf(hssfCell.getNumericCellValue());
             } else {
                 return String.valueOf(hssfCell.getStringCellValue());
@@ -114,9 +114,9 @@ public class ExcelUtil {
      * @return
      */
     public static String formatCell2(HSSFCell cell) {
-        if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
+        if (cell.getCellType() == CellType.BOOLEAN) {
             return String.valueOf(cell.getBooleanCellValue());
-        } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+        } else if (cell.getCellType() == CellType.NUMERIC) {
             //针对单元格式为日期格式
             if (HSSFDateUtil.isCellDateFormatted(cell)) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -138,7 +138,7 @@ public class ExcelUtil {
         if (cell == null) {
             return "";
         }
-        if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+        if (cell.getCellType() == CellType.NUMERIC) {
             //日期格式的处理
             if (HSSFDateUtil.isCellDateFormatted(cell)) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -148,27 +148,27 @@ public class ExcelUtil {
             return String.valueOf(cell.getNumericCellValue());
         }
 
-        if (cell.getCellTypeEnum() == CellType.STRING) {
+        if (cell.getCellType() == CellType.STRING) {
             //字符串
             return cell.getStringCellValue();
         }
 
-        if (cell.getCellTypeEnum() == CellType.FORMULA) {
+        if (cell.getCellType() == CellType.FORMULA) {
             // 公式
             return cell.getCellFormula();
         }
 
-        if (cell.getCellTypeEnum() == CellType.BLANK) {
+        if (cell.getCellType() == CellType.BLANK) {
             // 空白
             return "";
         }
 
-        if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
+        if (cell.getCellType() == CellType.BOOLEAN) {
             // 布尔取值
             return cell.getBooleanCellValue() + "";
         }
 
-        if (cell.getCellTypeEnum() == CellType.ERROR) {
+        if (cell.getCellType() == CellType.ERROR) {
             //错误类型
             return cell.getErrorCellValue() + "";
         }
