@@ -42,7 +42,10 @@ public class Test1 {
 //            System.out.print(now.compareTo(d));
 //			System.out.println(InvoiceTypeEnum.displayOf("专票"));
 //			System.out.println(InvoiceTypeEnum.displayOf("233"));
-			testJoin();
+//			testJoin();
+			String aa = "aapng";
+			System.out.println(aa.lastIndexOf("."));
+			System.out.println(1720/100 +1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
