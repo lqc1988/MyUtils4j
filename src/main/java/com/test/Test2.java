@@ -20,7 +20,9 @@ public class Test2 {
 //		System.out.println(  (float) 3/13);
 //		Calendar calendar = Calendar.getInstance();
 //		calendar.setTime(new Date());
-//		System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
-
+//		System.out.println(calendar.get(Calendar.DAY_OF_MONTH))
+        String fileUrl = "http://api.kuaidi100.com/label/getImage/20220711/904984CB74DC40A4B83759C4563DACEA";
+        String ext = fileUrl.substring(fileUrl.lastIndexOf("."));
+        System.out.println(ext);
     }
 }
