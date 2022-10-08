@@ -223,4 +223,30 @@ public class TimeUtils {
         return now.getTime();
     }
 
+    /**
+     * 日期相隔天数
+     *
+     * @param startDateInclusive
+     * @param endDateExclusive
+     * @return
+     */
+    public static int periodDays(LocalDate startDateInclusive, LocalDate endDateExclusive) {
+        return Period.between(startDateInclusive, endDateExclusive).getDays();
+    }
+
+
+    /**
+     * 日期相隔天数
+     * @param endTime
+     * @param startTime
+     * @return
+     */
+    public static int periodDays(Date endTime, Date startTime) {
+        LocalDateTime endTimer = LocalDateTime.ofInstant(endTime.toInstant(), ZoneId.systemDefault());
+        LocalDateTime startTimer = LocalDateTime.ofInstant(startTime.toInstant(), ZoneId.systemDefault());
+        Long days = Duration.between(startTimer, endTimer).toDays();
+        return days.intValue();
+    }
+
+
 }
