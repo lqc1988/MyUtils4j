@@ -1,6 +1,7 @@
 package com.lqc.util;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -62,5 +63,33 @@ public class ReflectUtils {
         Method method = ownerClass.getMethod(methodName, argsClass);
         method.setAccessible(true);
         return method.invoke(ownerClass.newInstance(), args);
+    }
+
+
+    /**
+     * 反射取值 BigDecimal
+     */
+    public static <T> BigDecimal getMethodValueByClass(T t, String methodName) {
+        Class clazz = t.getClass();
+        try {
+            return (BigDecimal) clazz.getMethod(methodName).invoke(t);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * 反射赋值 BigDecimal
+     */
+    public static void setMethodValueByClass(Object obj, Class cls, String MethodName, BigDecimal val) {
+        Method method = null;
+        try {
+            method = cls.getMethod(MethodName, BigDecimal.class);
+            method.invoke(obj, val);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

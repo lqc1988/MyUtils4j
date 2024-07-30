@@ -31,8 +31,8 @@ public class FreeMarkerDemo {
     private static final String CLASS_PATH = "src/main/java/com/lqc/freemarker/hello";
 
     public static void main(String[] args) {
-//        hello();
-        stringFreeMarker();
+        hello();
+//        stringFreeMarker();
     }
 
     /**

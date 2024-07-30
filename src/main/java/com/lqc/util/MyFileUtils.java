@@ -154,7 +154,8 @@ public class MyFileUtils extends FileUtils {
         }
         File localFile = new File(localPath);
         logger.info(opt + "开始，url:" + url);
-        copyURLToFile(new URL(url), localFile, 60000, 60000);
+        copyURLToFile(new URL(url), localFile);
+//        copyURLToFile(new URL(url), localFile, 60000, 60000);
         logger.info(opt + "url:" + url + "，文件大小：" + formatFileSize(localPath));
     }
 
